@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render
 
-from src.server.app.backend import get_datasets, create_dataset, get_dataset, delete_dataset, get_files, get_tasks
+from .backend import get_datasets, create_dataset, get_dataset, delete_dataset, get_files, get_tasks
 
 
 def handle_login(request):

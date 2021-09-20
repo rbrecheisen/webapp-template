@@ -16,7 +16,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', None)
 
 DEBUG = False if os.environ.get('DEBUG', 0) == 0 else True
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split('.')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+print(ALLOWED_HOSTS)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rq',
     'session_security',
     'app',
 ]
@@ -127,3 +129,7 @@ os.makedirs(STATIC_ROOT, exist_ok=True)
 MEDIA_URL = '/files/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, 'files')
 os.makedirs(MEDIA_ROOT, exist_ok=True)
+
+SESSION_SECURITY_WARN_AFTER = 840
+SESSION_SECURITY_EXPIRE_AFTER = 900
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

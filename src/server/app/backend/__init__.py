@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from src.server.app.models import DataSetModel, FileModel, TaskModel
+from ..models import DataSetModel, FileModel, TaskModel
 
 
 def get_datasets():

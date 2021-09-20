@@ -3,18 +3,15 @@ FROM tensorflow/tensorflow:latest-gpu
 MAINTAINER Ralph Brecheisen <r.brecheisen@maastrichtuniversity.nl>
 
 COPY requirements.txt /requirements.txt
-COPY src/server /src
-COPY docker-entrypoint.sh /src/docker-entrypoint.sh
 
 RUN apt-get -y update && \
     apt-get install -y vim libpq-dev && \
     pip install --upgrade pip && \
     pip install -r /requirements.txt && \
     pip install uwsgi gunicorn && \
+    mkdir /src && \
     mkdir /data && \
     mkdir /data/static && \
     mkdir /data/files
 
 WORKDIR /src
-
-# Do something with docker-entrypoint.sh here?
