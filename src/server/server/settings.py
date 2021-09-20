@@ -4,7 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-USE_DOCKER = True if os.environ.get('USE_DOCKER', 0) == 1 else False
+USE_DOCKER = True if int(os.environ.get('USE_DOCKER', '0')) == 1 else False
 
 if USE_DOCKER:
     ROOT_DIR = os.environ.get('ROOT_DIR', '/data')
