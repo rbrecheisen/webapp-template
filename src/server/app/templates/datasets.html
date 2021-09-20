@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header">Datasets</div>
+                <div class="card-body">
+                    {% if errors|length > 0 %}
+                        <p style="font-weight: bold; color: red">
+                            {% for error in errors %}
+                                {{ error }}<br>
+                            {% endfor %}
+                        </p>
+                        <br>
+                    {% endif %}
+                    <p class="card-text">This page allows you to upload datasets consisting of files.</p>
+                    <p>To delete the dataset, click the [delete] link next to it.</p>
+                    <br>
+                    <form action="/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="files">Files:</label>
+                        <input type="file" id="files" name="files" multiple/><br><br>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                    {% if datasets %}
+                    <b>Datasets</b>
+                    <ul class="list-group">
+                        {% for dataset in datasets %}
+                        <li class="list-group-item">
+                            <a href="/datasets/{{ dataset.id }}">{{ dataset.name }}</a>
+                            [<a href="/datasets/{{ dataset.id }}?action=delete">delete</a>]
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

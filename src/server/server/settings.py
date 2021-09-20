@@ -6,11 +6,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 USE_DOCKER = True if os.environ.get('USE_DOCKER', 0) == 1 else False
 
-SECRET_KEY = '1234' if os.environ.get('USE_DOCKER', 0) == 0 else os.environ['SECRET_KEY']
+if USE_DOCKER:
+    ROOT_DIR = os.environ.get('ROOT_DIR', '/data')
+else:
+    ROOT_DIR = os.environ.get('ROOT_DIR', '{}/data'.format(os.environ['HOME']))
+os.makedirs(ROOT_DIR, exist_ok=True)
 
-DEBUG = True if os.environ.get('USE_DOCKER', 0) == 0 else False
+SECRET_KEY = os.environ.get('SECRET_KEY', None)
 
-ALLOWED_HOSTS = []
+DEBUG = False if os.environ.get('DEBUG', 0) == 0 else True
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split('.')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -19,7 +25,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'app',
 ]
 
@@ -53,12 +58,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'server.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if USE_DOCKER:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('DB_NAME', 'postgres'),
+            'USER': os.environ.get('DB_USER', 'postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': int(os.environ.get('DB_PORT', '5432')),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -66,6 +83,25 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
+
+if USE_DOCKER:
+    FILE_UPLOAD_TEMP_DIR = '{}/files'.format(ROOT_DIR)
+else:
+    FILE_UPLOAD_TEMP_DIR = '/tmp'
+os.makedirs(FILE_UPLOAD_TEMP_DIR, exist_ok=True)
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440 * 40  # 100mb
+
+WORKER_TIMEOUT = int(os.environ.get('WORKER_TIMEOUT', '500'))
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': os.environ.get('REDIS_HOST', 'redis'),
+        'PORT': int(os.environ.get('REDIS_PORT', '6379')),
+        'DB': int(os.environ.get('REDIS_DB', '0')),
+        'DEFAULT_TIMEOUT': WORKER_TIMEOUT,
+    }
+}
 
 LANGUAGE_CODE = 'en-us'
 
@@ -77,14 +113,15 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = '/static'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-SESSION_SECURITY_WARN_AFTER = 840
-SESSION_SECURITY_EXPIRE_AFTER = 900
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
+os.makedirs(STATIC_ROOT, exist_ok=True)
+
+MEDIA_URL = '/files/'
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'files')
+os.makedirs(MEDIA_ROOT, exist_ok=True)
