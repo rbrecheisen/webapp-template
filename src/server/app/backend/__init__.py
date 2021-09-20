@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from src.server.app.models import DataSetModel, FileModel
+from src.server.app.models import DataSetModel, FileModel, TaskModel
 
 
 def get_datasets():
@@ -33,3 +33,7 @@ def get_file(file_id):
 
 def delete_file(f):
     f.delete()
+
+
+def get_tasks(dataset):
+    return TaskModel.objects.filter(dataset=dataset).all()

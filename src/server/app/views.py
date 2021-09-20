@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render
 
-from src.server.app.backend import get_datasets, create_dataset, get_dataset, delete_dataset, get_files
+from src.server.app.backend import get_datasets, create_dataset, get_dataset, delete_dataset, get_files, get_tasks
 
 
 def handle_login(request):
@@ -26,6 +26,10 @@ def handle_login(request):
 
 @login_required
 def datasets(request):
+    """ This view shows a list of datasets and allows upload of files that define a new dataset. Files
+    can be of any type and there can be files of mixing types in a single dataset. Only later processing
+    will determine whether file types are allowed.
+    """
     if request.method == 'GET':
         return render(request, 'datasets.html', context={'datasets': get_datasets()})
     elif request.method == 'POST':
@@ -38,9 +42,23 @@ def datasets(request):
 
 @login_required
 def dataset(request, dataset_id):
+    """ This view shows details about a single dataset and its files. You can also delete a dataset
+    by providing the 'action' query parameter in the URL. If the dataset is associated with tasks,
+    a list of these tasks is displayed.
+    """
     ds = get_dataset(dataset_id)
     action = request.GET.get('action', None)
     if action == 'delete':
         delete_dataset(ds)
         return render(request, 'datasets.html', context={'datasets': get_datasets()})
-    return render(request, 'dataset.html', context={'dataset': ds, 'files': get_files(ds)})
+    return render(request, 'dataset.html', context={'dataset': ds, 'tasks': get_tasks(ds), 'files': get_files(ds)})
+
+
+@login_required
+def tasks(request):
+    pass
+
+
+@login_required
+def task(request, task_id):
+    pass
