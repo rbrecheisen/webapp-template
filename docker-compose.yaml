@@ -19,7 +19,9 @@ services:
     environment:
       - ROOT_DIR=/data
       - SECRET_KEY=1234
-      - DOCKER
+      - ALLOWED_HOSTS
+      - USE_DOCKER
+      - DEBUG
       - WORKER_TIMEOUT
     volumes:
       - ./docker-entrypoint.sh:/docker-entrypoint.sh
@@ -42,7 +44,9 @@ services:
     environment:
       - ROOT_DIR=/data
       - SECRET_KEY=1234
-      - DOCKER
+      - ALLOWED_HOSTS
+      - USE_DOCKER
+      - DEBUG
       - WORKER_TIMEOUT
     volumes:
       - ./src/server:/src

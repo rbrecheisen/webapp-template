@@ -14,10 +14,9 @@ os.makedirs(ROOT_DIR, exist_ok=True)
 
 SECRET_KEY = os.environ.get('SECRET_KEY', None)
 
-DEBUG = False if os.environ.get('DEBUG', 0) == 0 else True
+DEBUG = False if int(os.environ.get('DEBUG', '0')) == 0 else True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
-print(ALLOWED_HOSTS)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
