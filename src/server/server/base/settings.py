@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'app',
 ]
 
+print(INSTALLED_APPS)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
