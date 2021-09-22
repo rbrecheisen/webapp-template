@@ -36,7 +36,7 @@ def dataset_post_delete(sender, instance, **kwargs):
 
 
 @receiver(models.signals.post_delete, sender=FileModel)
-def image_post_delete(sender, instance, **kwargs):
+def file_post_delete(sender, instance, **kwargs):
     if instance.file_obj:
         if os.path.isfile(instance.file_obj.path):
             os.remove(instance.file_obj.path)
