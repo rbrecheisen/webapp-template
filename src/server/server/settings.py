@@ -4,7 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-USE_DOCKER = True if os.environ.get('USE_DOCKER', 0) == 1 else False
+USE_DOCKER = True if int(os.environ.get('USE_DOCKER', 0)) == 1 else False
 
 if USE_DOCKER:
     ROOT_DIR = os.environ.get('ROOT_DIR', '/data')
@@ -17,7 +17,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY', None)
 DEBUG = False if os.environ.get('DEBUG', 0) == 0 else True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
-print(ALLOWED_HOSTS)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
