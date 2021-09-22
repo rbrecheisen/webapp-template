@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render
 
-from .backend import get_datasets, create_dataset, get_dataset, delete_dataset, get_files, get_tasks
+from .backend import *
 
 
 def handle_login(request):
@@ -31,11 +31,11 @@ def datasets(request):
     will determine whether file types are allowed.
     """
     if request.method == 'GET':
-        return render(request, 'datasets.html', context={'datasets': get_datasets()})
+        return render(request, 'base/datasets.html', context={'datasets': get_datasets()})
     elif request.method == 'POST':
         files = request.FILES.getlist('files')
         create_dataset(files, request.user)
-        return render(request, 'datasets.html', context={'datasets': get_datasets(), 'errors': []})
+        return render(request, 'base/datasets.html', context={'datasets': get_datasets(), 'errors': []})
     else:
         return HttpResponseForbidden('Wrong method')
 
@@ -50,8 +50,8 @@ def dataset(request, dataset_id):
     action = request.GET.get('action', None)
     if action == 'delete':
         delete_dataset(ds)
-        return render(request, 'datasets.html', context={'datasets': get_datasets()})
-    return render(request, 'dataset.html', context={'dataset': ds, 'tasks': get_tasks(ds), 'files': get_files(ds)})
+        return render(request, 'base/datasets.html', context={'datasets': get_datasets()})
+    return render(request, 'base/dataset.html', context={'dataset': ds, 'tasks': get_tasks(ds), 'files': get_files(ds)})
 
 
 @login_required

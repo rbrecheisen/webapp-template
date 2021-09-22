@@ -65,13 +65,14 @@ if USE_DOCKER:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ.get('DB_NAME', 'postgres'),
-            'USER': os.environ.get('DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
             'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': int(os.environ.get('DB_PORT', '5432')),
+            'PORT': 5432,
         }
     }
+    print('DB_HOST: {}'.format(DATABASES['default']['HOST']))
 else:
     DATABASES = {
         'default': {
@@ -79,6 +80,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print('DB_NAME: {}'.format(DATABASES['default']['NAME']))
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
