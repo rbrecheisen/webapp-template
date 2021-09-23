@@ -35,5 +35,17 @@ def delete_file(f):
     f.delete()
 
 
-def get_tasks(dataset):
+def get_task_types():
+    return ['Dummy task', 'My task']
+
+
+def get_tasks():
+    return TaskModel.objects.all()
+
+
+def get_tasks_for_dataset(dataset):
     return TaskModel.objects.filter(dataset=dataset).all()
+
+
+def get_task(task_id):
+    return TaskModel.objects.get(pk=task_id)
