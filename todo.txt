@@ -1,2 +1,18 @@
 TODO
 ====
+I want to implement task execution in the template project so that you can easily add tasks of different types
+to the copied project. For this purpose I'd like to implement a simple dummy task, called DummyTask, that prints
+out some information. The question is how to integrate the task concept with the Django RQ library where you
+enqueue jobs.
+
+Tasks are created and executed on a single dataset. I think that is a good starting point before we make task
+management any more complex. So on the dataset.html page there should be button that allows you to create a new
+task that knows how to process the current dataset. For example, if we have a task of type 'DummyTask' all it
+does is print out the names of each file in the dataset. A task called 'ValidateModel' knows how to process (and
+validate) a dataset consisting of L3 images and TAG files.
+
+So whenever you create a new task you need (a) the task type or class and (b) the dataset ID. The URL of the task
+should ideally be relative to the dataset URL, you already know the dataset ID.
+
+There exists only one (running) task per dataset. Only if a task is finished, can another task be created. Perhaps
+we should also make sure that the old one gets deleted. Obviously, the task results are kept around.

@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render
 
 from .backend import *
+from .tasks import TaskUnknownError
 
 
 def handle_login(request):
@@ -61,7 +62,13 @@ def tasks(request):
         return render(request, 'base/tasks.html', context={
             'tasks': get_tasks(), 'task_types': get_task_types()})
     elif request.method == 'POST':
-        pass
+        task_type = request.POST.get('task_type', None)
+        try:
+            create_task(task_type)
+            return render(request, 'base/tasks.html', context={
+                'tasks': get_tasks(), 'task_types': get_task_types()})
+        except TaskUnknownError:
+            return HttpResponseForbidden('Unknown task')
     else:
         return HttpResponseForbidden('Wrong method')
 
