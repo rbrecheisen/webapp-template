@@ -17,6 +17,16 @@
                     </a>
                     <br>
                     <br>
+                    {% if tasks %}
+                    <b>Tasks</b>
+                    <ul class="list-group">
+                        {% for t in tasks %}
+                        <li class="list-group-item">{{ t.name }}</li>
+                        {% endfor %}
+                    </ul>
+                    <br>
+                    <br>
+                    {% endif %}
                     <b>Files</b><br>
                     <ul class="list-group">
                         {% for f in files %}

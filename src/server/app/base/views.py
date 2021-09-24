@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render
 
-from .backend import Backend
+from .backend import *
 
 
 def handle_login(request):
@@ -31,11 +31,11 @@ def datasets(request):
     will determine whether file types are allowed.
     """
     if request.method == 'GET':
-        return render(request, 'base/datasets.html', context={'datasets': Backend.get_datasets()})
+        return render(request, 'base/datasets.html', context={'datasets': get_datasets()})
     elif request.method == 'POST':
         files = request.FILES.getlist('files')
-        Backend.create_dataset(files, request.user)
-        return render(request, 'base/datasets.html', context={'datasets': Backend.get_datasets(), 'errors': []})
+        create_dataset(files, request.user)
+        return render(request, 'base/datasets.html', context={'datasets': get_datasets(), 'errors': []})
     else:
         return HttpResponseForbidden('Wrong method')
 
@@ -46,18 +46,24 @@ def dataset(request, dataset_id):
     by providing the 'action' query parameter in the URL. If the dataset is associated with tasks,
     a list of these tasks is displayed.
     """
-    ds = Backend.get_dataset(dataset_id)
+    ds = get_dataset(dataset_id)
     action = request.GET.get('action', None)
     if action == 'delete':
-        Backend.delete_dataset(ds)
-        return render(request, 'base/datasets.html', context={'datasets': Backend.get_datasets()})
+        delete_dataset(ds)
+        return render(request, 'base/datasets.html', context={'datasets': get_datasets()})
     return render(request, 'base/dataset.html', context={
-        'dataset': ds, 'tasks': Backend.get_tasks(ds), 'files': Backend.get_files(ds)})
+        'dataset': ds, 'tasks': get_tasks_for_dataset(ds), 'files': get_files(ds)})
 
 
 @login_required
 def tasks(request):
-    pass
+    if request.method == 'GET':
+        return render(request, 'base/tasks.html', context={
+            'tasks': get_tasks(), 'task_types': get_task_types()})
+    elif request.method == 'POST':
+        pass
+    else:
+        return HttpResponseForbidden('Wrong method')
 
 
 @login_required

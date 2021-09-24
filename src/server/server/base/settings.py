@@ -30,8 +30,6 @@ INSTALLED_APPS = [
     'app',
 ]
 
-print(INSTALLED_APPS)
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -74,7 +72,6 @@ if USE_DOCKER:
             'PORT': 5432,
         }
     }
-    print('DB_HOST: {}'.format(DATABASES['default']['HOST']))
 else:
     DATABASES = {
         'default': {
@@ -82,7 +79,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    print('DB_NAME: {}'.format(DATABASES['default']['NAME']))
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

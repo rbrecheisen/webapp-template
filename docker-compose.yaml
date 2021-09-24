@@ -17,8 +17,8 @@ services:
     container_name: server_web
     command: bash -c "/docker-entrypoint.sh"
     environment:
-      - ROOT_DIR=/data
-      - SECRET_KEY=1234
+      - ROOT_DIR
+      - SECRET_KEY
       - ALLOWED_HOSTS
       - USE_DOCKER
       - DEBUG
@@ -43,8 +43,8 @@ services:
     container_name: server_rq
     command: bash -c "export CUDA_VISIBLE_DEVICES=1 && python manage.py rqworker"
     environment:
-      - ROOT_DIR=/data
-      - SECRET_KEY=1234
+      - ROOT_DIR
+      - SECRET_KEY
       - ALLOWED_HOSTS
       - USE_DOCKER
       - DEBUG
