@@ -36,7 +36,7 @@ def datasets(request):
     elif request.method == 'POST':
         files = request.FILES.getlist('files')
         create_dataset(files, request.user)
-        return render(request, 'base/datasets.html', context={'datasets': get_datasets(), 'errors': []})
+        return render(request, 'base/datasets.html', context={'datasets': get_datasets()})
     else:
         return HttpResponseForbidden('Wrong method')
 

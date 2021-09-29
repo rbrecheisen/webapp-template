@@ -6,13 +6,6 @@
             <div class="card" style="margin-top: 10px;">
                 <div class="card-header">Datasets</div>
                 <div class="card-body">
-                    {% if errors|length > 0 %}
-                        <p style="font-weight: bold; color: red">
-                            {% for error in errors %}
-                                {{ error }}<br>
-                            {% endfor %}
-                        </p>
-                    {% endif %}
                     <form action="/datasets/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="files">Files:</label>
