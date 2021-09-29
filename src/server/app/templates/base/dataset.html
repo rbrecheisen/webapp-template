@@ -7,11 +7,6 @@
                 <div class="card-header">Dataset <b>{{ dataset.name }}</b></div>
                 <div class="card-body">
                     <p style="margin-top: 10px"><a href="/datasets/">Back</a></p>
-                    This page shows dataset details (move this text to a tag).<br>
-                    <br>
-                    <br>
-                    To download the dataset files as a ZIP file, click the button below.<br>
-                    <br>
                     <a href="/downloads/{{ dataset.id }}">
                         <button class="btn btn-primary">Download</button>
                     </a>
@@ -21,8 +16,8 @@
                     <ul class="list-group">
                         {% for t in tasks %}
                         <li class="list-group-item">
-                            <a href="/datasets/{{ dataset.id }}/tasks/{{ task.id }}">{{ task.name }}</a>
-                            [<a href="/datasets/{{ dataset.id }}/tasks/{{ task.id }}?action=delete">delete</a>]
+                            <a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}">{{ t.name }}</a>
+                            [<a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}?action=delete">delete</a>]
                         </li>
                         {% endfor %}
                     </ul>
@@ -39,9 +34,7 @@
                         <br>
                         <button type="submit" class="btn btn-primary">Start new task</button>
                     </form>
-                    <br>
-                    <br>
-                    <b>Files</b><br>
+                    <b>Files</b>
                     <ul class="list-group">
                         {% for f in files %}
                         <li class="list-group-item">{{ f.file_obj.name }}</li>

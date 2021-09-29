@@ -12,16 +12,13 @@
                                 {{ error }}<br>
                             {% endfor %}
                         </p>
-                        <br>
                     {% endif %}
-                    <a href="/tasks/">Tasks</a>
-                    <p class="card-text">This page allows you to upload datasets consisting of files.</p>
-                    <p>To delete the dataset, click the [delete] link next to it.</p>
-                    <br>
                     <form action="/datasets/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="files">Files:</label>
-                        <input type="file" id="files" name="files" multiple/><br><br>
+                        <input type="file" id="files" name="files" multiple/>
+                        <br>
+                        <br>
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </form>
                     {% if datasets %}

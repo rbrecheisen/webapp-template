@@ -45,16 +45,14 @@ def get_task_types():
     return TASKS
 
 
-def create_task(task_type, dataset_id):
+def create_task(task_type, dataset):
     if task_type == TASKS[0]:
-        dataset = DataSetModel.objects.get(pk=dataset_id)
         task = MyQuickTask()
         q = django_rq.get_queue('default')
         job = q.enqueue(task.execute, dataset)
         TaskModel.objects.create(
             name=task.name, task_type=task_type, dataset=dataset, job_id=job.id)
     elif task_type == TASKS[1]:
-        dataset = DataSetModel.objects.get(pk=dataset_id)
         task = MyLongRunningTask()
         q = django_rq.get_queue('default')
         job = q.enqueue(task.execute, dataset)
