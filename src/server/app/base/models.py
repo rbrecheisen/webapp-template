@@ -23,6 +23,7 @@ class TaskResultModel(models.Model):
 
 class TaskModel(models.Model):
     name = models.CharField(max_length=1024, editable=True, null=False)
+    task_type = models.CharField(max_length=1024, editable=True, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     job_id = models.CharField(max_length=128, null=True)
     dataset = models.ForeignKey(DataSetModel, on_delete=models.CASCADE)
