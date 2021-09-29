@@ -53,20 +53,19 @@ def dataset(request, dataset_id):
         delete_dataset(ds)
         return render(request, 'base/datasets.html', context={'datasets': get_datasets()})
     return render(request, 'base/dataset.html', context={
-        'dataset': ds, 'tasks': get_tasks_for_dataset(ds), 'files': get_files(ds)})
+        'dataset': ds, 'tasks': get_tasks_for_dataset(ds), 'task_types': get_task_types(), 'files': get_files(ds)})
 
 
 @login_required
-def tasks(request):
-    if request.method == 'GET':
-        return render(request, 'base/tasks.html', context={
-            'tasks': get_tasks(), 'task_types': get_task_types()})
-    elif request.method == 'POST':
+def tasks(request, dataset_id):
+    if request.method == 'POST':
+        ds = get_dataset(dataset_id)
         task_type = request.POST.get('task_type', None)
+        print('POSTed task_type = {}'.format(task_type))
         try:
-            create_task(task_type)
-            return render(request, 'base/tasks.html', context={
-                'tasks': get_tasks(), 'task_types': get_task_types()})
+            create_task(task_type, dataset_id)
+            return render(request, 'base/dataset.html', context={
+                'dataset': ds, 'tasks': get_tasks_for_dataset(ds), 'task_types': get_task_types(), 'files': get_files(ds)})
         except TaskUnknownError:
             return HttpResponseForbidden('Unknown task')
     else:
@@ -74,5 +73,12 @@ def tasks(request):
 
 
 @login_required
-def task(request, task_id):
-    pass
+def task(request, dataset_id, task_id):
+    if request.method == 'GET':
+        ds = get_dataset(dataset_id)
+        t = get_task(task_id)
+        action = request.GET.get('action', None)
+        if action == 'delete':
+            t.delete()
+        return render(request, 'base/dataset.html', context={
+            'dataset': ds, 'tasks': get_tasks_for_dataset(ds), 'task_types': get_task_types(), 'files': get_files(ds)})

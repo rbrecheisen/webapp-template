@@ -7,7 +7,7 @@ urlpatterns = [
     path('', datasets),
     path('datasets/', datasets),
     path('datasets/<str:dataset_id>', dataset),
-    path('tasks/', tasks),
-    path('tasks/<str:task_id>', task),
+    path('datasets/<str:dataset_id>/tasks/', tasks),
+    path('datasets/<str:dataset_id>/tasks/<str:task_id>', task),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

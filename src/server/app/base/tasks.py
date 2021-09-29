@@ -11,27 +11,25 @@ class TaskUnknownError(TaskError):
     pass
 
 
-class Task:
+class MyLongRunningTask:
+
+    def __init__(self):
+        self.name = 'MyLongRunningTask'
 
     @django_rq.job
-    def execute_base(self, *args, **kwargs):
-        self.execute(args, kwargs)
-
     def execute(self, *args, **kwargs):
-        raise NotImplementedError()
-
-
-class MyLongRunningTask(Task):
-
-    def execute(self, *args, **kwargs):
-        import time
+        print('Executing a long-running task...')
         for i in range(1000):
             print(i)
             time.sleep(1)
 
 
-class MyQuickTask(Task):
+class MyQuickTask:
 
+    def __init__(self):
+        self.name = 'MyQuickTask'
+
+    @django_rq.job
     def execute(self, *args, **kwargs):
         print('Executing a quick task...')
         time.sleep(1)

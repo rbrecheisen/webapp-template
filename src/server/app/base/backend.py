@@ -62,10 +62,6 @@ def create_task(task_type, dataset_id):
         raise TaskUnknownError()
 
 
-def get_tasks():
-    return TaskModel.objects.all()
-
-
 def get_tasks_for_dataset(dataset):
     return TaskModel.objects.filter(dataset=dataset).all()
 
