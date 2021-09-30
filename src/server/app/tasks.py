@@ -1,6 +1,8 @@
-import time
-
+import os
 import django_rq
+
+from django.conf import settings
+from django.db.models.fields.files import FieldFile
 
 
 class TaskError(Exception):
@@ -9,6 +11,18 @@ class TaskError(Exception):
 
 class TaskUnknownError(TaskError):
     pass
+
+
+class MyQuickTask:
+
+    def __init__(self):
+        self.name = 'MyQuickTask'
+
+    @django_rq.job
+    def execute(self, dataset):
+        print('Executing a quick task...')
+        with open(os.path.join(settings.FILE_UPLOAD_TEMP_DIR, 'MyQuickTask.csv'), 'w') as f:
+            f.write('some text\n')
 
 
 class MyLongRunningTask:
@@ -20,17 +34,9 @@ class MyLongRunningTask:
     def execute(self, dataset):
         print('Executing a long-running task...')
         for i in range(1000):
-            print(i)
-
-
-class MyQuickTask:
-
-    def __init__(self):
-        self.name = 'MyQuickTask'
-
-    @django_rq.job
-    def execute(self, dataset):
-        print('Executing a quick task...')
+            with open(os.path.join(
+                    settings.FILE_UPLOAD_TEMP_DIR, 'MyLongRunningTask-{:04d}.csv'.format(i)), 'w') as f:
+                f.write('some text\n')
 
 
 class PredictBodyCompositionScoresTask:
