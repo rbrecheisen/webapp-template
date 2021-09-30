@@ -1,18 +1,44 @@
-TODO
-====
-I want to implement task execution in the template project so that you can easily add tasks of different types
-to the copied project. For this purpose I'd like to implement a simple dummy task, called DummyTask, that prints
-out some information. The question is how to integrate the task concept with the Django RQ library where you
-enqueue jobs.
-
-Tasks are created and executed on a single dataset. I think that is a good starting point before we make task
-management any more complex. So on the dataset.html page there should be button that allows you to create a new
-task that knows how to process the current dataset. For example, if we have a task of type 'DummyTask' all it
-does is print out the names of each file in the dataset. A task called 'ValidateModel' knows how to process (and
-validate) a dataset consisting of L3 images and TAG files.
-
-So whenever you create a new task you need (a) the task type or class and (b) the dataset ID. The URL of the task
-should ideally be relative to the dataset URL, you already know the dataset ID.
-
-There exists only one (running) task per dataset. Only if a task is finished, can another task be created. Perhaps
-we should also make sure that the old one gets deleted. Obviously, the task results are kept around.
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header">Dataset <b>{{ dataset.name }}</b></div>
+                <div class="card-body">
+                    <p style="margin-top: 10px"><a href="/datasets/">Back</a></p>
+                    <b>Tasks</b>
+                    <ul class="list-group">
+                        {% for t in tasks %}
+                        <li class="list-group-item">
+                            {{ t.name }}
+                            ({{ t.job_status }})
+                            [<a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}?action=delete">delete</a>]
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <br>
+                    <form action="/datasets/{{ dataset.id }}/tasks/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="task_types">Choose a task:</label>
+                        <select name="task_type" id="task_type">
+                            {% for task_type in task_types %}
+                            <option value="{{ task_type }}">{{ task_type }}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Start new task</button>
+                    </form>
+                    <b>Files</b>
+                    <ul class="list-group">
+                        {% for f in files %}
+                        <li class="list-group-item">{{ f.file_obj.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

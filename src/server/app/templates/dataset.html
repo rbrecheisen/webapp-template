@@ -1,4 +1,4 @@
-{% extends "base/base.html" %}
+{% extends "base.html" %}
 {% block content %}
 <div class="container-fluid">
     <div class="row">
@@ -7,11 +7,6 @@
                 <div class="card-header">Dataset <b>{{ dataset.name }}</b></div>
                 <div class="card-body">
                     <p style="margin-top: 10px"><a href="/datasets/">Back</a></p>
-                    <a href="/downloads/{{ dataset.id }}">
-                        <button class="btn btn-primary">Download</button>
-                    </a>
-                    <br>
-                    <br>
                     <b>Tasks</b>
                     <ul class="list-group">
                         {% for t in tasks %}
