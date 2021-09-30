@@ -51,7 +51,13 @@ def create_task(task_type, dataset):
         raise TaskUnknownError()
     task = TASK_REGISTRY[task_type]
     q = django_rq.get_queue('default')
-    q.enqueue(task.execute, dataset)
+    job_id = q.enqueue(task.execute, dataset)
+    TaskModel.objects.create(
+        name=task.name,
+        job_id=job_id,
+        job_status='queued',
+        dataset=dataset,
+    )
 
 
 def get_tasks_for_dataset(dataset):
@@ -60,3 +66,18 @@ def get_tasks_for_dataset(dataset):
 
 def get_task(task_id):
     return TaskModel.objects.get(pk=task_id)
+
+
+def cancel_and_delete_task(task):
+    from redis import Redis
+    from rq.exceptions import NoSuchJobError
+    from django_rq.jobs import get_job_class
+    try:
+        # Try to cancel the job if it's still running
+        cls = get_job_class()
+        job = cls.fetch(
+            task.job_id, connection=Redis(host='server_redis'))
+        job.cancel()
+    except NoSuchJobError:
+        pass
+    task.delete()

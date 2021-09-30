@@ -46,7 +46,7 @@ def dataset(request, dataset_id):
         return render(request, 'datasets.html', context={'datasets': get_datasets()})
     return render(request, 'dataset.html', context={
         'dataset': ds,
-        # 'tasks': get_tasks_for_dataset(ds),
+        'tasks': get_tasks_for_dataset(ds),
         'task_types': get_task_types(),
         'files': get_files(ds)
     })
@@ -61,7 +61,7 @@ def tasks(request, dataset_id):
             create_task(task_type, ds)
             return render(request, 'dataset.html', context={
                 'dataset': ds,
-                # 'tasks': get_tasks_for_dataset(ds),
+                'tasks': get_tasks_for_dataset(ds),
                 'task_types': get_task_types(),
                 'files': get_files(ds)
             })
@@ -79,10 +79,10 @@ def task(request, dataset_id, task_id):
         t = get_task(task_id)
         action = request.GET.get('action', None)
         if action == 'delete':
-            t.delete()
+            cancel_and_delete_task(t)
         return render(request, 'dataset.html', context={
             'dataset': ds,
-            # 'tasks': get_tasks_for_dataset(ds),
+            'tasks': get_tasks_for_dataset(ds),
             'task_types': get_task_types(),
             'files': get_files(ds)
         })

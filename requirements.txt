@@ -7,3 +7,4 @@ tensorflow==2.5.0
 psycopg2-binary
 django-rq
 redis
+rq
