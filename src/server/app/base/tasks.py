@@ -17,7 +17,7 @@ class MyLongRunningTask:
         self.name = 'MyLongRunningTask'
 
     @django_rq.job
-    def execute(self, *args, **kwargs):
+    def execute(self, task, dataset):
         print('Executing a long-running task...')
         for i in range(1000):
             print(i)
@@ -29,5 +29,5 @@ class MyQuickTask:
         self.name = 'MyQuickTask'
 
     @django_rq.job
-    def execute(self, *args, **kwargs):
+    def execute(self, task, dataset):
         print('Executing a quick task...')

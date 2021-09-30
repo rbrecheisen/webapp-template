@@ -49,15 +49,15 @@ def create_task(task_type, dataset):
     if task_type == TASKS[0]:
         task = MyQuickTask()
         q = django_rq.get_queue('default')
-        job = q.enqueue(task.execute, dataset)
+        job = q.enqueue(task.execute, task, dataset)
         TaskModel.objects.create(
-            name=task.name, task_type=task_type, dataset=dataset, job_id=job.id)
+            name=task.name, task_type=task_type, dataset=dataset, job_id=job.id, job_status='queued')
     elif task_type == TASKS[1]:
         task = MyLongRunningTask()
         q = django_rq.get_queue('default')
-        job = q.enqueue(task.execute, dataset)
+        job = q.enqueue(task.execute, task, dataset)
         TaskModel.objects.create(
-            name=task.name, task_type=task_type, dataset=dataset, job_id=job.id)
+            name=task.name, task_type=task_type, dataset=dataset, job_id=job.id, job_status='queued')
     else:
         raise TaskUnknownError()
 

@@ -27,10 +27,6 @@ def handle_login(request):
 
 @login_required
 def datasets(request):
-    """ This view shows a list of datasets and allows upload of files that define a new dataset. Files
-    can be of any type and there can be files of mixing types in a single dataset. Only later processing
-    will determine whether file types are allowed.
-    """
     if request.method == 'GET':
         return render(request, 'base/datasets.html', context={'datasets': get_datasets()})
     elif request.method == 'POST':
@@ -43,10 +39,6 @@ def datasets(request):
 
 @login_required
 def dataset(request, dataset_id):
-    """ This view shows details about a single dataset and its files. You can also delete a dataset
-    by providing the 'action' query parameter in the URL. If the dataset is associated with tasks,
-    a list of these tasks is displayed.
-    """
     ds = get_dataset(dataset_id)
     action = request.GET.get('action', None)
     if action == 'delete':
@@ -65,7 +57,6 @@ def tasks(request, dataset_id):
     if request.method == 'POST':
         ds = get_dataset(dataset_id)
         task_type = request.POST.get('task_type', None)
-        print('POSTed task_type = {}'.format(task_type))
         try:
             create_task(task_type, ds)
             return render(request, 'base/dataset.html', context={
@@ -82,6 +73,7 @@ def tasks(request, dataset_id):
 
 @login_required
 def task(request, dataset_id, task_id):
+    """ This view is only used for deleting tasks. """
     if request.method == 'GET':
         ds = get_dataset(dataset_id)
         t = get_task(task_id)

@@ -16,7 +16,8 @@
                     <ul class="list-group">
                         {% for t in tasks %}
                         <li class="list-group-item">
-                            <a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}">{{ t.name }}</a>
+                            {{ t.name }}
+                            ({{ t.job_status }})
                             [<a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}?action=delete">delete</a>]
                         </li>
                         {% endfor %}
