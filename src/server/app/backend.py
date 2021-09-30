@@ -3,8 +3,7 @@ import django_rq
 from django.utils import timezone
 
 from .models import *
-from .tasks import TaskUnknownError, MyQuickTask, MyLongRunningTask
-from .tasks import TASK_REGISTRY
+from .tasks import TaskUnknownError, TASK_REGISTRY
 
 
 TASKS = ['MyQuickTask', 'MyLongRunningTask']

@@ -1,8 +1,8 @@
 import os
 import django_rq
 
-from django.conf import settings
-from django.db.models.fields.files import FieldFile
+from .backend import create_dataset
+from django.core.files.uploadedfile import TemporaryUploadedFile
 
 
 class TaskError(Exception):
@@ -21,8 +21,11 @@ class MyQuickTask:
     @django_rq.job
     def execute(self, dataset):
         print('Executing a quick task...')
-        with open(os.path.join(settings.FILE_UPLOAD_TEMP_DIR, 'MyQuickTask.csv'), 'w') as f:
-            f.write('some text\n')
+        txt = 'some text\n'
+        f = TemporaryUploadedFile('MyQuickTask.csv', 'text/plain', len(txt), 'utf-8')
+        f.file.write(txt)
+        f.file.seek(0)
+        create_dataset([f], None)
 
 
 class MyLongRunningTask:
@@ -34,9 +37,7 @@ class MyLongRunningTask:
     def execute(self, dataset):
         print('Executing a long-running task...')
         for i in range(1000):
-            with open(os.path.join(
-                    settings.FILE_UPLOAD_TEMP_DIR, 'MyLongRunningTask-{:04d}.csv'.format(i)), 'w') as f:
-                f.write('some text\n')
+            print(i)
 
 
 class PredictBodyCompositionScoresTask:
