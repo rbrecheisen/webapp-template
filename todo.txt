@@ -7,7 +7,9 @@ TODO
 
 [ ] Implement L3/TAG file matching task
 
-[ ] Use Storage class for file storage instead of open('', 'w')gitt
+[ ] Use Storage class for file storage instead of open('', 'w')
+
+[ ] Create task classes in separate package and name them MyQuickTask.py
 
 ====
 
