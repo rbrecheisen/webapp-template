@@ -7,9 +7,6 @@ from .models import *
 from .tasks import TaskUnknownError, TASK_REGISTRY
 
 
-TASKS = ['MyQuickTask', 'MyLongRunningTask']
-
-
 def get_dataset_models():
     return DataSetModel.objects.all()
 
