@@ -1,44 +1,8 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-10">
-            <div class="card" style="margin-top: 10px;">
-                <div class="card-header">Dataset <b>{{ dataset.name }}</b></div>
-                <div class="card-body">
-                    <p style="margin-top: 10px"><a href="/datasets/">Back</a></p>
-                    <b>Tasks</b>
-                    <ul class="list-group">
-                        {% for t in tasks %}
-                        <li class="list-group-item">
-                            {{ t.name }}
-                            ({{ t.job_status }})
-                            [<a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}?action=delete">delete</a>]
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <br>
-                    <form action="/datasets/{{ dataset.id }}/tasks/" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <label for="task_types">Choose a task:</label>
-                        <select name="task_type" id="task_type">
-                            {% for task_type in task_types %}
-                            <option value="{{ task_type }}">{{ task_type }}</option>
-                            {% endfor %}
-                        </select>
-                        <br>
-                        <br>
-                        <button type="submit" class="btn btn-primary">Start new task</button>
-                    </form>
-                    <b>Files</b>
-                    <ul class="list-group">
-                        {% for f in files %}
-                        <li class="list-group-item">{{ f.file_obj.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+TODO
+====
+
+1. Improve task handling
+
+2. Improve dataset creation using string file paths instead of FileField - This will allow you to
+   create new datasets without uploading first. Tasks can then generate new datasets (e.g., filtered
+   versions of the original)

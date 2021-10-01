@@ -1,10 +1,3 @@
-import os
-import django_rq
-
-from .backend import create_dataset
-from django.core.files.uploadedfile import TemporaryUploadedFile
-
-
 class TaskError(Exception):
     pass
 
@@ -15,52 +8,39 @@ class TaskUnknownError(TaskError):
 
 class MyQuickTask:
 
-    def __init__(self):
-        self.name = 'MyQuickTask'
-
-    @django_rq.job
-    def execute(self, dataset):
+    @staticmethod
+    def execute(task_model):
         print('Executing a quick task...')
-        txt = 'some text\n'
-        f = TemporaryUploadedFile('MyQuickTask.csv', 'text/plain', len(txt), 'utf-8')
-        f.file.write(txt)
-        f.file.seek(0)
-        create_dataset([f], None)
+        print('Bla')
+        task_model.job_status = 'finished'
+        task_model.save()
 
 
 class MyLongRunningTask:
 
-    def __init__(self):
-        self.name = 'MyLongRunningTask'
-
-    @django_rq.job
-    def execute(self, dataset):
+    @staticmethod
+    def execute(task_model):
         print('Executing a long-running task...')
         for i in range(1000):
             print(i)
+        task_model.job_status = 'finished'
+        task_model.save()
 
 
 class PredictBodyCompositionScoresTask:
 
-    def __init__(self):
-        self.name = 'PredictBodyCompositionScoresTask'
-
-    @django_rq.job
-    def execute(self, dataset):
-        """ What should this task do? It applies our deep learning model to each file in the
-        dataset and then calculates a number of scores as well as a PNG image of the result.
-        """
-        pass
+    @staticmethod
+    def execute(task_model):
+        task_model.job_status = 'finished'
+        task_model.save()
 
 
 class ValidateBodyCompositionScoresTask:
 
-    def __init__(self):
-        self.name = 'ValidateBodyCompositionScoresTask'
-
-    @django_rq.job
-    def execute(self, dataset):
-        pass
+    @staticmethod
+    def execute(task_model):
+        task_model.job_status = 'finished'
+        task_model.save()
 
 
 TASK_REGISTRY = {

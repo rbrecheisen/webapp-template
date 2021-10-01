@@ -24,6 +24,7 @@ services:
       - DEBUG
       - WORKER_TIMEOUT
       - DB_HOST
+      - REDIS_HOST
     volumes:
       - ./docker-entrypoint.sh:/docker-entrypoint.sh
       - ./src/server:/src
@@ -50,6 +51,7 @@ services:
       - DEBUG
       - WORKER_TIMEOUT
       - DB_HOST
+      - REDIS_HOST
     volumes:
       - ./src/server:/src
       - data:/data

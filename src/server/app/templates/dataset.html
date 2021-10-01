@@ -17,6 +17,8 @@
                         </li>
                         {% endfor %}
                     </ul>
+                    <a href="/datasets/{{ dataset.id }}">Refresh task list</a>
+                    <br>
                     <br>
                     <form action="/datasets/{{ dataset.id }}/tasks/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}

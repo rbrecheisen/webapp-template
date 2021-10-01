@@ -28,42 +28,42 @@ def handle_login(request):
 @login_required
 def datasets(request):
     if request.method == 'GET':
-        return render(request, 'datasets.html', context={'datasets': get_datasets()})
+        return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     elif request.method == 'POST':
         files = request.FILES.getlist('files')
-        create_dataset(files, request.user)
-        return render(request, 'datasets.html', context={'datasets': get_datasets()})
+        create_dataset_model(files, request.user)
+        return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     else:
         return HttpResponseForbidden('Wrong method')
 
 
 @login_required
 def dataset(request, dataset_id):
-    ds = get_dataset(dataset_id)
+    ds = get_dataset_model(dataset_id)
     action = request.GET.get('action', None)
     if action == 'delete':
-        delete_dataset(ds)
-        return render(request, 'datasets.html', context={'datasets': get_datasets()})
+        delete_dataset_model(ds)
+        return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     return render(request, 'dataset.html', context={
         'dataset': ds,
-        'tasks': get_tasks_for_dataset(ds),
+        'tasks': get_task_models_for_dataset(ds),
         'task_types': get_task_types(),
-        'files': get_files(ds)
+        'files': get_file_models(ds)
     })
 
 
 @login_required
 def tasks(request, dataset_id):
     if request.method == 'POST':
-        ds = get_dataset(dataset_id)
+        ds = get_dataset_model(dataset_id)
         task_type = request.POST.get('task_type', None)
         try:
             create_task(task_type, ds)
             return render(request, 'dataset.html', context={
                 'dataset': ds,
-                'tasks': get_tasks_for_dataset(ds),
+                'tasks': get_task_models_for_dataset(ds),
                 'task_types': get_task_types(),
-                'files': get_files(ds)
+                'files': get_file_models(ds)
             })
         except TaskUnknownError:
             return HttpResponseForbidden('Unknown task')
@@ -75,16 +75,16 @@ def tasks(request, dataset_id):
 def task(request, dataset_id, task_id):
     """ This view is only used for deleting tasks. """
     if request.method == 'GET':
-        ds = get_dataset(dataset_id)
-        t = get_task(task_id)
+        ds = get_dataset_model(dataset_id)
+        t = get_task_model(task_id)
         action = request.GET.get('action', None)
         if action == 'delete':
             cancel_and_delete_task(t)
         return render(request, 'dataset.html', context={
             'dataset': ds,
-            'tasks': get_tasks_for_dataset(ds),
+            'tasks': get_task_models_for_dataset(ds),
             'task_types': get_task_types(),
-            'files': get_files(ds)
+            'files': get_file_models(ds)
         })
     else:
         return HttpResponseForbidden('Wrong method')
