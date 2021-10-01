@@ -61,7 +61,6 @@ class MyLongRunningTask(Task):
         ds_name = '{}-{}'.format(task_model.dataset.name, task_model.name)
         ds = DataSetModel.objects.create(name=ds_name, owner=task_model.dataset.owner)
         for i in range(1000):
-            # TODO: Use Storage class to save files!
             file_path = os.path.join(settings.MEDIA_ROOT, '{:04d}.txt'.format(i))
             with open(file_path, 'w') as f:
                 f.write('some text\n')
