@@ -50,6 +50,8 @@ def dataset(request, dataset_id):
         if new_name:
             ds = rename_dataset_model(ds, new_name)
             return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
+    else:
+        return HttpResponseForbidden('Wrong method')
     return render(request, 'dataset.html', context={
         'dataset': ds,
         'tasks': get_task_models_for_dataset(ds),

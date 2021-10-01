@@ -1,13 +1,13 @@
 TODO
 ====
 
-[ ] Allow renaming of datasets - Task output datasets are derived from an original dataset and named
-    accordingly, e.g., my-dataset-<task name>-<timestamp>
-
-[ ] Create new task page where you can specify additional properties through a form
+[ ] Create task that generates output dataset
 
 [X] Improve task handling
 
 [X] Improve dataset creation using string file paths instead of FileField - This will allow you to
     create new datasets without uploading first. Tasks can then generate new datasets (e.g., filtered
     versions of the original)
+
+[X] Allow renaming of datasets - Task output datasets are derived from an original dataset and named
+    accordingly, e.g., my-dataset-<task name>-<timestamp>
