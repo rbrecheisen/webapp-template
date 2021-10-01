@@ -1,3 +1,6 @@
+from django import forms
+
+
 class TaskError(Exception):
     pass
 
@@ -30,11 +33,20 @@ class Task:
         raise NotImplementedError()
 
 
+class TaskForm(forms.Form):
+    pass
+
+
 class MyQuickTask(Task):
 
     @staticmethod
     def execute_base(task_model):
+        # TODO: How to couple the task and its form
         print('Bla')
+
+
+class MyQuickTaskForm(TaskForm):
+    text = forms.CharField(label='Text', max_length=16)
 
 
 class MyLongRunningTask(Task):

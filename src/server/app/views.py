@@ -1,8 +1,6 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from django.shortcuts import render
 
 from .backend import *
@@ -33,12 +31,7 @@ def datasets(request):
         return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     elif request.method == 'POST':
         files = request.FILES.getlist('files')
-        file_paths = []
-        for f in files:
-            file_path = default_storage.save(f.name, ContentFile(f.read()))
-            file_paths.append(file_path)
-        # create_dataset_model(files, request.user)
-        create_dataset_model_from_file_paths(file_paths, request.user)
+        create_dataset_model_from_files(files, request.user)
         return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     else:
         return HttpResponseForbidden('Wrong method')
@@ -47,15 +40,21 @@ def datasets(request):
 @login_required
 def dataset(request, dataset_id):
     ds = get_dataset_model(dataset_id)
-    action = request.GET.get('action', None)
-    if action == 'delete':
-        delete_dataset_model(ds)
-        return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
+    if request.method == 'GET':
+        action = request.GET.get('action', None)
+        if action == 'delete':
+            delete_dataset_model(ds)
+            return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
+    elif request.method == 'POST':
+        new_name = request.POST.get('new_name', None)
+        if new_name:
+            ds = rename_dataset_model(ds, new_name)
+            return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     return render(request, 'dataset.html', context={
         'dataset': ds,
         'tasks': get_task_models_for_dataset(ds),
         'task_types': get_task_types(),
-        'files': get_file_models(ds)
+        'file_names': get_file_path_models_names(ds)
     })
 
 
@@ -70,7 +69,7 @@ def tasks(request, dataset_id):
                 'dataset': ds,
                 'tasks': get_task_models_for_dataset(ds),
                 'task_types': get_task_types(),
-                'files': get_file_models(ds)
+                'file_names': get_file_path_models_names(ds)
             })
         except TaskUnknownError:
             return HttpResponseForbidden('Unknown task')
@@ -90,7 +89,7 @@ def task(request, dataset_id, task_id):
             'dataset': ds,
             'tasks': get_task_models_for_dataset(ds),
             'task_types': get_task_types(),
-            'files': get_file_models(ds)
+            'file_names': get_file_path_models_names(ds)
         })
     else:
         return HttpResponseForbidden('Wrong method')

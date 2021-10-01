@@ -2,6 +2,9 @@ import django_rq
 
 from django.utils import timezone
 from django.conf import settings
+from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 from .models import *
 from .tasks import TaskUnknownError, TASK_REGISTRY
@@ -17,18 +20,15 @@ def get_dataset_model(dataset_id):
     return DataSetModel.objects.get(pk=dataset_id)
 
 
-def create_dataset_model(files, user):
+def create_dataset_model_from_files(files, user):
     timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
     ds = DataSetModel.objects.create(name='dataset-{}'.format(timestamp), owner=user)
     for f in files:
-        FileModel.objects.create(file_obj=f, dataset=ds)
-    return ds
-
-
-def create_dataset_model_from_file_paths(file_paths, user):
-    timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
-    ds = DataSetModel.objects.create(name='dataset-{}'.format(timestamp), owner=user)
-    for file_path in file_paths:
+        if isinstance(f, InMemoryUploadedFile) or isinstance(f, TemporaryUploadedFile):
+            file_path = default_storage.save(f.name, ContentFile(f.read()))
+            file_path = os.path.join(settings.MEDIA_ROOT, file_path)
+        else:
+            file_path = f
         FilePathModel.objects.create(file_path=file_path, dataset=ds)
     return ds
 
@@ -37,18 +37,44 @@ def delete_dataset_model(dataset):
     dataset.delete()
 
 
-# FILE MODEL
-
-def get_file_models(dataset):
-    return FileModel.objects.filter(dataset=dataset).all()
-
-
-def get_file_model(file_id):
-    return FileModel.objects.get(pk=file_id)
+def rename_dataset_model(dataset, new_name):
+    dataset.name = new_name
+    dataset.save()
+    return dataset
 
 
-def delete_file_model(f):
-    f.delete()
+# def get_file_models(dataset):
+#     return FileModel.objects.filter(dataset=dataset).all()
+#
+#
+# def get_file_model(file_id):
+#     return FileModel.objects.get(pk=file_id)
+#
+#
+# def delete_file_model(f):
+#     f.delete()
+
+
+# FILE PATH MODEL
+
+def get_file_path_models(dataset):
+    return FilePathModel.objects.filter(dataset=dataset).all()
+
+
+def get_file_path_models_names(dataset):
+    file_path_models = get_file_path_models(dataset)
+    file_names = []
+    for fp in file_path_models:
+        file_names.append(os.path.split(fp.file_path)[1])
+    return file_names
+
+
+def get_file_path_model(file_path_id):
+    return FilePathModel.objects.get(pk=file_path_id)
+
+
+def delete_file_path_model(fp):
+    fp.delete()
 
 
 # TASK MODEL

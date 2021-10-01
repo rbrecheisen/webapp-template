@@ -7,6 +7,14 @@
                 <div class="card-header">Dataset <b>{{ dataset.name }}</b></div>
                 <div class="card-body">
                     <p style="margin-top: 10px"><a href="/datasets/">Back</a></p>
+                    <form action="/datasets/{{ dataset.id }}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="new_name">Type a new name if needed:</label>
+                        <input type="text" name="new_name" id="new_name" value="{{ dataset.name }}" size="100">
+                        <br>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Rename dataset</button>
+                    </form>
                     <b>Tasks</b>
                     <ul class="list-group">
                         {% for t in tasks %}
@@ -26,7 +34,7 @@
                     <br>
                     <form action="/datasets/{{ dataset.id }}/tasks/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <label for="task_types">Choose a task:</label>
+                        <label for="task_type">Choose the task type:</label>
                         <select name="task_type" id="task_type">
                             {% for task_type in task_types %}
                             <option value="{{ task_type }}">{{ task_type }}</option>
@@ -38,8 +46,8 @@
                     </form>
                     <b>Files</b>
                     <ul class="list-group">
-                        {% for f in files %}
-                        <li class="list-group-item">{{ f.file_obj.name }}</li>
+                        {% for file_name in file_names %}
+                        <li class="list-group-item">{{ file_name }}</li>
                         {% endfor %}
                     </ul>
                 </div>

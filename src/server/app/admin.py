@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import DataSetModel, FileModel, TaskModel
+from .models import DataSetModel, FilePathModel, TaskModel
 
 
 @admin.register(DataSetModel)
@@ -7,8 +7,8 @@ class DataSetModelAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(FileModel)
-class FileModelAdmin(admin.ModelAdmin):
+@admin.register(FilePathModel)
+class FilePathModelAdmin(admin.ModelAdmin):
     pass
 
 
