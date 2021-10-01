@@ -4,7 +4,7 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render
 
 from .backend import *
-from .tasks import TaskUnknownError
+from .tasks.BaseTask import TaskUnknownError
 
 
 def handle_login(request):

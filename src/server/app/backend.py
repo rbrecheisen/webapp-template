@@ -7,7 +7,8 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 from .models import *
-from .tasks import TaskUnknownError, TASK_REGISTRY
+from .tasks import TASK_REGISTRY
+from .tasks.BaseTask import TaskUnknownError
 
 
 # DATASET MODEL
