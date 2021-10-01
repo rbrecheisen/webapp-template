@@ -7,6 +7,10 @@ TODO
 
 [ ] Implement L3/TAG file matching task
 
+[ ] Use Storage class for file storage instead of open('', 'w')gitt
+
+====
+
 [X] Create task that generates output dataset
 
 [X] Improve task handling
