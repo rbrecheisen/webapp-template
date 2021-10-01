@@ -24,7 +24,11 @@
                             [<a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}?action=delete">delete</a>]
                             {% if t.error_message %}
                             <br>
-                            <i>Error: {{ t.error_message }}</i>
+                            <i style="color: red;">Error: {{ t.error_message }}</i>
+                            {% endif %}
+                            {% if t.info_message %}
+                            <br>
+                            <i>Info: {{ t.info_message }}</i>
                             {% endif %}
                         </li>
                         {% endfor %}

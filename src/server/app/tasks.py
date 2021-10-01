@@ -66,6 +66,7 @@ class MyLongRunningTask(Task):
             with open(file_path, 'w') as f:
                 f.write('some text\n')
             FilePathModel.objects.create(file_path=file_path, dataset=ds)
+        task_model.info_message = 'Successfully executed long-running task'
 
 
 class PredictBodyCompositionScoresTask(Task):
