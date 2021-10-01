@@ -25,6 +25,14 @@ def create_dataset_model(files, user):
     return ds
 
 
+def create_dataset_model_from_file_paths(file_paths, user):
+    timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
+    ds = DataSetModel.objects.create(name='dataset-{}'.format(timestamp), owner=user)
+    for file_path in file_paths:
+        FilePathModel.objects.create(file_path=file_path, dataset=ds)
+    return ds
+
+
 def delete_dataset_model(dataset):
     dataset.delete()
 

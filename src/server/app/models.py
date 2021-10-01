@@ -19,6 +19,11 @@ class FileModel(models.Model):
     dataset = models.ForeignKey(DataSetModel, on_delete=models.CASCADE)
 
 
+class FilePathModel(models.Model):
+    file_path = models.CharField(max_length=2048, editable=True, null=False)
+    dataset = models.ForeignKey(DataSetModel, on_delete=models.CASCADE)
+
+
 class TaskModel(models.Model):
     name = models.CharField(max_length=1024, editable=True, null=False)
     created_at = models.DateTimeField(auto_now_add=True)

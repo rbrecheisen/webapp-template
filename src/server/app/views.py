@@ -1,6 +1,8 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from django.shortcuts import render
 
 from .backend import *
@@ -31,7 +33,12 @@ def datasets(request):
         return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     elif request.method == 'POST':
         files = request.FILES.getlist('files')
-        create_dataset_model(files, request.user)
+        file_paths = []
+        for f in files:
+            file_path = default_storage.save(f.name, ContentFile(f.read()))
+            file_paths.append(file_path)
+        # create_dataset_model(files, request.user)
+        create_dataset_model_from_file_paths(file_paths, request.user)
         return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     else:
         return HttpResponseForbidden('Wrong method')
