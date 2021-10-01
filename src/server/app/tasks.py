@@ -6,41 +6,57 @@ class TaskUnknownError(TaskError):
     pass
 
 
-class MyQuickTask:
+class TaskExecutionError(TaskError):
+    pass
 
-    @staticmethod
-    def execute(task_model):
-        print('Executing a quick task...')
-        print('Bla')
-        task_model.job_status = 'finished'
+
+class Task:
+
+    def execute(self, task_model):
+        print('Executing task {}...'.format(task_model.name))
+        task_model.job_status = 'running'
         task_model.save()
-
-
-class MyLongRunningTask:
+        try:
+            self.execute_base(task_model)
+            task_model.job_status = 'finished'
+            task_model.save()
+        except TaskExecutionError as e:
+            task_model.job_status = 'failed'
+            task_model.error_message = str(e)
+            task_model.save()
 
     @staticmethod
-    def execute(task_model):
-        print('Executing a long-running task...')
+    def execute_base(task_model):
+        raise NotImplementedError()
+
+
+class MyQuickTask(Task):
+
+    @staticmethod
+    def execute_base(task_model):
+        print('Bla')
+
+
+class MyLongRunningTask(Task):
+
+    @staticmethod
+    def execute_base(task_model):
         for i in range(1000):
             print(i)
-        task_model.job_status = 'finished'
-        task_model.save()
 
 
-class PredictBodyCompositionScoresTask:
+class PredictBodyCompositionScoresTask(Task):
 
     @staticmethod
-    def execute(task_model):
-        task_model.job_status = 'finished'
-        task_model.save()
+    def execute_base(task_model):
+        raise TaskExecutionError('Not implemented yet')
 
 
-class ValidateBodyCompositionScoresTask:
+class ValidateBodyCompositionScoresTask(Task):
 
     @staticmethod
-    def execute(task_model):
-        task_model.job_status = 'finished'
-        task_model.save()
+    def execute_base(task_model):
+        raise TaskExecutionError('Not implemented yet')
 
 
 TASK_REGISTRY = {

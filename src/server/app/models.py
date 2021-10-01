@@ -24,6 +24,7 @@ class TaskModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     job_id = models.CharField(max_length=128, null=True)
     job_status = models.CharField(max_length=16, null=True)
+    error_message = models.CharField(max_length=2048, null=True)
     # Delete task if dataset gets deleted
     dataset = models.ForeignKey(DataSetModel, on_delete=models.CASCADE)
 

@@ -7,6 +7,8 @@ from .models import *
 from .tasks import TaskUnknownError, TASK_REGISTRY
 
 
+# DATASET MODEL
+
 def get_dataset_models():
     return DataSetModel.objects.all()
 
@@ -27,6 +29,8 @@ def delete_dataset_model(dataset):
     dataset.delete()
 
 
+# FILE MODEL
+
 def get_file_models(dataset):
     return FileModel.objects.filter(dataset=dataset).all()
 
@@ -39,9 +43,23 @@ def delete_file_model(f):
     f.delete()
 
 
+# TASK MODEL
+
+def get_task_models_for_dataset(dataset):
+    return TaskModel.objects.filter(dataset=dataset).all()
+
+
+def get_task_model(task_id):
+    return TaskModel.objects.get(pk=task_id)
+
+
+# TASK TYPE
+
 def get_task_types():
     return TASK_REGISTRY.keys()
 
+
+# TASK
 
 def create_task(task_type, dataset):
     if task_type in get_task_types():
@@ -59,14 +77,6 @@ def create_task(task_type, dataset):
 def execute_task(task_model):
     task = TASK_REGISTRY[task_model.name]
     task.execute(task_model)
-
-
-def get_task_models_for_dataset(dataset):
-    return TaskModel.objects.filter(dataset=dataset).all()
-
-
-def get_task_model(task_id):
-    return TaskModel.objects.get(pk=task_id)
 
 
 def cancel_and_delete_task(task_model):

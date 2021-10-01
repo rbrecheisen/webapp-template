@@ -73,7 +73,6 @@ def tasks(request, dataset_id):
 
 @login_required
 def task(request, dataset_id, task_id):
-    """ This view is only used for deleting tasks. """
     if request.method == 'GET':
         ds = get_dataset_model(dataset_id)
         t = get_task_model(task_id)
