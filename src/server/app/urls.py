@@ -9,5 +9,6 @@ urlpatterns = [
     path('datasets/<str:dataset_id>', dataset),
     path('datasets/<str:dataset_id>/tasks/', tasks),
     path('datasets/<str:dataset_id>/tasks/<str:task_id>', task),
+    path('download/<str:dataset_id>', download),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

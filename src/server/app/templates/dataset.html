@@ -18,6 +18,9 @@
                         <br>
                         <button type="submit" class="btn btn-primary">Rename dataset</button>
                     </form>
+                    <a href="/download/{{ dataset.id }}">Download dataset files</a>
+                    <br>
+                    <br>
                     <b>Tasks</b>
                     <ul class="list-group">
                         {% for t in tasks %}
@@ -51,10 +54,6 @@
                         <br>
                         <button type="submit" class="btn btn-primary">Start new task</button>
                     </form>
-                    <br>
-                    <a href="/download/{{ dataset.id }}">
-                        <button class="btn btn-primary">Download dataset files</button>
-                    </a>
                     <br>
                     <br>
                     <b>Files</b>

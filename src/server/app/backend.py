@@ -124,6 +124,9 @@ def get_zipped_download(dataset):
     with zipfile.ZipFile(file_path, 'w') as zip_obj:
         files = get_file_path_models(dataset)
         for f in files:
-            fp = f.file_obj.path
+            fp = f.file_path
             zip_obj.write(fp, arcname=basename(fp))
+    # Save ZIP file path in dataset so ZIP file is deleted when dataset is deleted
+    dataset.zip_file_path = file_path
+    dataset.save()
     return file_path
