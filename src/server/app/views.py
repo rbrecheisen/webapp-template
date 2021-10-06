@@ -1,6 +1,7 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
+from django.core.files import File
 from django.shortcuts import render
 
 from .backend import *
@@ -93,5 +94,18 @@ def task(request, dataset_id, task_id):
             'task_types': get_task_types(),
             'file_names': get_file_path_models_names(ds)
         })
+    else:
+        return HttpResponseForbidden('Wrong method')
+
+
+@login_required
+def download(request, dataset_id):
+    if request.method == 'GET':
+        ds = get_dataset_model(dataset_id)
+        file_path = get_zipped_download(ds)
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(File(f), content_type='application/octet-stream')
+            response['Content-Disposition'] = 'attachment; filename="{}.zip"'.format(ds.name)
+            return response
     else:
         return HttpResponseForbidden('Wrong method')

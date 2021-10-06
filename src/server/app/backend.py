@@ -1,5 +1,7 @@
 import django_rq
+import zipfile
 
+from os.path import basename
 from django.utils import timezone
 from django.conf import settings
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
@@ -115,3 +117,13 @@ def cancel_and_delete_task(task_model):
     except NoSuchJobError:
         pass
     task_model.delete()
+
+
+def get_zipped_download(dataset):
+    file_path = '/tmp/{}.zip'.format(dataset.name)
+    with zipfile.ZipFile(file_path, 'w') as zip_obj:
+        files = get_file_path_models(dataset)
+        for f in files:
+            fp = f.file_obj.path
+            zip_obj.write(fp, arcname=basename(fp))
+    return file_path
