@@ -48,7 +48,7 @@ def dataset(request, dataset_id):
     elif request.method == 'POST':
         new_name = request.POST.get('new_name', None)
         if new_name:
-            ds = rename_dataset_model(ds, new_name)
+            rename_dataset_model(ds, new_name)
             return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
     else:
         return HttpResponseForbidden('Wrong method')

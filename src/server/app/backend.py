@@ -44,18 +44,6 @@ def rename_dataset_model(dataset, new_name):
     return dataset
 
 
-# def get_file_models(dataset):
-#     return FileModel.objects.filter(dataset=dataset).all()
-#
-#
-# def get_file_model(file_id):
-#     return FileModel.objects.get(pk=file_id)
-#
-#
-# def delete_file_model(f):
-#     f.delete()
-
-
 # FILE PATH MODEL
 
 def get_file_path_models(dataset):
