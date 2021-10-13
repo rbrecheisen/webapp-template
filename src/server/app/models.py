@@ -20,6 +20,7 @@ class FilePathModel(models.Model):
 
 class TaskModel(models.Model):
     name = models.CharField(max_length=1024, editable=True, null=False)
+    parameters = models.JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     job_id = models.CharField(max_length=128, null=True)
     job_status = models.CharField(max_length=16, null=True)

@@ -29,7 +29,7 @@
                     <a href="/tasks/">Refresh task list</a>
                     <br>
                     <br>
-                    <form action="/tasks/" method="post" enctype="multipart/form-data">
+                    <form action="/tasks/new" method="get" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="task_type">Choose type of task:</label><br>
                         <select name="task_type" id="task_type">
@@ -47,7 +47,7 @@
                         </select>
                         <br>
                         <br>
-                        <button type="submit" class="btn btn-primary">Start task for dataset</button>
+                        <button type="submit" class="btn btn-primary">Create new task for dataset</button>
                     </form>
                 </div>
             </div>

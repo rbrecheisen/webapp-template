@@ -90,9 +90,11 @@ def get_task_types():
 
 # TASK
 
-def create_task(task_type, dataset):
-    if task_type in get_task_types():
-        task_model = TaskModel.objects.create(name=task_type, dataset=dataset)
+def create_task(parameters):
+    dataset = DataSetModel.objects.get(pk=parameters['dataset_id'])
+    if parameters['task_type'] in get_task_types():
+        task_model = TaskModel.objects.create(
+            name=parameters['task_type'], dataset=dataset, parameters=parameters)
         q = django_rq.get_queue('default')
         job = q.enqueue(execute_task, task_model)
         task_model.job_id = job.id
@@ -124,8 +126,8 @@ def cancel_and_delete_task(task_model):
     task_model.delete()
 
 
-def get_task_form(task_type, dataset):
-    return TASK_FORM_REGISTRY[task_type](dataset)
+def get_task_form(task_type):
+    return TASK_FORM_REGISTRY[task_type]()
 
 
 def get_zipped_download(dataset):

@@ -1,6 +1,6 @@
 from django import forms
 
-from .BaseTask import Task, TaskForm
+from .BaseTask import Task
 
 
 class MyQuickTask(Task):
@@ -10,5 +10,6 @@ class MyQuickTask(Task):
         task_model.info_message = 'Successfully executed quick task'
 
 
-class MyQuickTaskForm(TaskForm):
-    name = forms.CharField(label='name', max_length=128)
+class MyQuickTaskForm(forms.Form):
+    pass
+

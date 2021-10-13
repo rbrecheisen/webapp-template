@@ -1,5 +1,3 @@
-from django import forms
-
 from ..models import DataSetModel, FilePathModel
 
 
@@ -43,13 +41,3 @@ class Task:
     @staticmethod
     def execute_base(task_model):
         raise NotImplementedError()
-
-
-class TaskForm(forms.Form):
-
-    def __init__(self, *args, **kwargs):
-        self.dataset_id = kwargs.pop('dataset_id')
-        super(TaskForm, self).__init__(*args, **kwargs)
-        self.fields['dataset_id'].widget = forms.CharField(label='dataset_id')
-
-    dataset_id = forms.CharField()

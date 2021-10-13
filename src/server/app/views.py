@@ -69,10 +69,8 @@ def tasks(request):
             'datasets': get_dataset_models(),
         })
     elif request.method == 'POST':
-        task_type = request.POST.get('task_type', None)
-        dataset_id = request.POST.get('dataset_id', None)
-        ds = get_dataset_model(dataset_id)
-        create_task(task_type, ds)
+        parameters = dict(request.POST.items())
+        create_task(parameters)
         return render(request, 'tasks.html', context={
             'tasks': get_task_models(),
             'task_types': get_task_types(),
@@ -95,6 +93,21 @@ def task(request, task_id):
                 'datasets': get_dataset_models(),
             })
         return render(request, 'task.html', context={'task': t})
+    else:
+        return HttpResponseForbidden('Wrong method')
+
+
+@login_required
+def new_task(request):
+    if request.method == 'GET':
+        task_type = request.GET.get('task_type', None)
+        dataset_id = request.GET.get('dataset_id', None)
+        ds = get_dataset_model(dataset_id)
+        return render(request, 'new_task.html', context={
+            'form': get_task_form(task_type),
+            'task_type': task_type,
+            'dataset': ds,
+        })
     else:
         return HttpResponseForbidden('Wrong method')
 
