@@ -9,7 +9,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 from .models import *
-from .tasks import TASK_REGISTRY
+from .tasks import TASK_REGISTRY, TASK_FORM_REGISTRY
 from .tasks.BaseTask import TaskUnknownError
 
 
@@ -98,13 +98,14 @@ def create_task(task_type, dataset):
         task_model.job_id = job.id
         task_model.job_status = 'queued'
         task_model.save()
+        return task_model
     else:
         raise TaskUnknownError()
 
 
 @django_rq.job
 def execute_task(task_model):
-    task = TASK_REGISTRY[task_model.name]
+    task = TASK_REGISTRY[task_model.name]()
     task.execute(task_model)
 
 
@@ -121,6 +122,10 @@ def cancel_and_delete_task(task_model):
     except NoSuchJobError:
         pass
     task_model.delete()
+
+
+def get_task_form(task_type, dataset):
+    return TASK_FORM_REGISTRY[task_type](dataset)
 
 
 def get_zipped_download(dataset):

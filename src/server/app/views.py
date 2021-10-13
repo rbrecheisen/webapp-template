@@ -72,7 +72,7 @@ def tasks(request):
         task_type = request.POST.get('task_type', None)
         dataset_id = request.POST.get('dataset_id', None)
         ds = get_dataset_model(dataset_id)
-        create_task(task_type, ds)
+        t = create_task(task_type, ds)
         return render(request, 'tasks.html', context={
             'tasks': get_task_models(),
             'task_types': get_task_types(),
@@ -94,7 +94,7 @@ def task(request, task_id):
                 'task_types': get_task_types(),
                 'datasets': get_dataset_models(),
             })
-        return render(request, 'task.html')
+        return render(request, 'task.html', context={'task': t})
     else:
         return HttpResponseForbidden('Wrong method')
 

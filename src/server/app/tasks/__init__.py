@@ -6,9 +6,12 @@ from .CheckDicomTask import CheckDicomTask
 
 
 TASK_REGISTRY = {
-    'MyQuickTask': MyQuickTask(),
-    'MyLongRunningTask': MyLongRunningTask(),
-    'PredictBodyCompositionScoresTask': PredictBodyCompositionScoresTask(),
-    'ValidateBodyCompositionScoresTask': ValidateBodyCompositionScoresTask(),
-    'CheckDicomTask': CheckDicomTask(),
+    'MyQuickTask': MyQuickTask,
+    'MyLongRunningTask': MyLongRunningTask,
+    'PredictBodyCompositionScoresTask': PredictBodyCompositionScoresTask,
+    'ValidateBodyCompositionScoresTask': ValidateBodyCompositionScoresTask,
+    'CheckDicomTask': CheckDicomTask,
+}
+
+TASK_FORM_REGISTRY = {
 }
