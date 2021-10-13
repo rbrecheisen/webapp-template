@@ -6,6 +6,8 @@
             <div class="card" style="margin-top: 10px;">
                 <div class="card-header">Datasets</div>
                 <div class="card-body">
+                    <a href="/tasks/">Tasks</a><br>
+                    <br>
                     <form action="/datasets/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="files">Files:</label>

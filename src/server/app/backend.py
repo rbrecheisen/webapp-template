@@ -74,6 +74,10 @@ def get_task_models_for_dataset(dataset):
     return TaskModel.objects.filter(dataset=dataset).all()
 
 
+def get_task_models():
+    return TaskModel.objects.all()
+
+
 def get_task_model(task_id):
     return TaskModel.objects.get(pk=task_id)
 

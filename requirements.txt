@@ -1,6 +1,7 @@
 django==3.2.3
 django-session-security==2.6.6
 gunicorn==20.1.0
+barbell2light
 uwsgi==2.0.19.1
 pytest==6.2.4
 tensorflow==2.4.0

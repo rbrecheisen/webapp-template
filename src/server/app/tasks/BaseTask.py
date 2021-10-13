@@ -1,3 +1,6 @@
+from ..models import DataSetModel, FilePathModel
+
+
 class TaskError(Exception):
     pass
 
@@ -11,6 +14,16 @@ class TaskExecutionError(TaskError):
 
 
 class Task:
+
+    @staticmethod
+    def create_output_dataset(task_model):
+        ds_name = '{}-{}'.format(task_model.dataset.name, task_model.name)
+        ds = DataSetModel.objects.create(name=ds_name, owner=task_model.dataset.owner)
+        return ds
+
+    @staticmethod
+    def create_output_file(file_path, dataset):
+        return FilePathModel.objects.create(file_path=file_path, dataset=dataset)
 
     def execute(self, task_model):
         print('Executing task {}...'.format(task_model.name))

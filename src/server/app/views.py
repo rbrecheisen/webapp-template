@@ -56,44 +56,45 @@ def dataset(request, dataset_id):
     return render(request, 'dataset.html', context={
         'dataset': ds,
         'tasks': get_task_models_for_dataset(ds),
-        'task_types': get_task_types(),
         'file_names': get_file_path_models_names(ds)
     })
 
 
 @login_required
-def tasks(request, dataset_id):
-    if request.method == 'POST':
-        ds = get_dataset_model(dataset_id)
+def tasks(request):
+    if request.method == 'GET':
+        return render(request, 'tasks.html', context={
+            'tasks': get_task_models(),
+            'task_types': get_task_types(),
+            'datasets': get_dataset_models(),
+        })
+    elif request.method == 'POST':
         task_type = request.POST.get('task_type', None)
-        try:
-            create_task(task_type, ds)
-            return render(request, 'dataset.html', context={
-                'dataset': ds,
-                'tasks': get_task_models_for_dataset(ds),
-                'task_types': get_task_types(),
-                'file_names': get_file_path_models_names(ds)
-            })
-        except TaskUnknownError:
-            return HttpResponseForbidden('Unknown task')
+        dataset_id = request.POST.get('dataset_id', None)
+        ds = get_dataset_model(dataset_id)
+        create_task(task_type, ds)
+        return render(request, 'tasks.html', context={
+            'tasks': get_task_models(),
+            'task_types': get_task_types(),
+            'datasets': get_dataset_models(),
+        })
     else:
         return HttpResponseForbidden('Wrong method')
 
 
 @login_required
-def task(request, dataset_id, task_id):
+def task(request, task_id):
     if request.method == 'GET':
-        ds = get_dataset_model(dataset_id)
         t = get_task_model(task_id)
         action = request.GET.get('action', None)
         if action == 'delete':
             cancel_and_delete_task(t)
-        return render(request, 'dataset.html', context={
-            'dataset': ds,
-            'tasks': get_task_models_for_dataset(ds),
-            'task_types': get_task_types(),
-            'file_names': get_file_path_models_names(ds)
-        })
+            return render(request, 'tasks.html', context={
+                'tasks': get_task_models(),
+                'task_types': get_task_types(),
+                'datasets': get_dataset_models(),
+            })
+        return render(request, 'task.html')
     else:
         return HttpResponseForbidden('Wrong method')
 
