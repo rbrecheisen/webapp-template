@@ -14,6 +14,6 @@ TASK_REGISTRY = {
 }
 
 TASK_FORM_REGISTRY = {
-    'MyQuickTask': MyQuickTaskForm,
+    'MyQuickTask': None,
     'MyLongRunningTask': MyLongRunningTaskForm,
 }

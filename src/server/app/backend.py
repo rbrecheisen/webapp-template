@@ -127,7 +127,11 @@ def cancel_and_delete_task(task_model):
 
 
 def get_task_form(task_type):
-    return TASK_FORM_REGISTRY[task_type]()
+    cls = TASK_FORM_REGISTRY[task_type]
+    if cls:
+        return TASK_FORM_REGISTRY[task_type]()
+    else:
+        return None
 
 
 def get_zipped_download(dataset):

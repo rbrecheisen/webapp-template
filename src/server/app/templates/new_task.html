@@ -12,7 +12,11 @@
                     <br>
                     <form action="/tasks/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{ form }}<br>
+                        {% if form %}
+                            {{ form }}<br>
+                        {% else %}
+                            <i>No parameters required for this task</i><br>
+                        {% endif %}
                         <br>
                         <input type="hidden" name="dataset_id" value="{{ dataset.id }}">
                         <input type="hidden" name="task_type" value="{{ task_type }}">
