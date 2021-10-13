@@ -1,4 +1,4 @@
-from .MyQuickTask import MyQuickTask
+from .MyQuickTask import MyQuickTask, MyQuickTaskForm
 from .MyLongRunningTask import MyLongRunningTask
 from .PredictBodyCompositionTask import PredictBodyCompositionScoresTask
 from .ValidateBodyCompositionTask import ValidateBodyCompositionScoresTask
@@ -14,4 +14,5 @@ TASK_REGISTRY = {
 }
 
 TASK_FORM_REGISTRY = {
+    'MyQuickTask': MyQuickTaskForm,
 }
