@@ -4,7 +4,10 @@
     <div class="row">
         <div class="col-sm-10">
             <div class="card" style="margin-top: 10px;">
-                <div class="card-header">Dataset <b>{{ dataset.name }}</b></div>
+                <div class="card-header">
+                    Dataset <b>{{ dataset.name }}</b><br>
+                    [<a href="/datasets/{{ dataset.id }}?action=delete">delete</a>]
+                </div>
                 <div class="card-body">
                     <p style="margin-top: 10px"><a href="/datasets/">Back</a></p>
                     <form action="/datasets/{{ dataset.id }}" method="post" enctype="multipart/form-data">
@@ -15,39 +18,30 @@
                         <br>
                         <button type="submit" class="btn btn-primary">Rename dataset</button>
                     </form>
-                    <b>Tasks</b>
+                    <a href="/download/{{ dataset.id }}">Download dataset files</a>
+                    <br>
+                    <br>
+                    <b>Tasks for this dataset</b>
                     <ul class="list-group">
-                        {% for t in tasks %}
-                        <li class="list-group-item">
-                            {{ t.name }}
-                            ({{ t.job_status }})
-                            [<a href="/datasets/{{ dataset.id }}/tasks/{{ t.id }}?action=delete">delete</a>]
-                            {% if t.error_message %}
-                            <br>
-                            <i style="color: red;">Error: {{ t.error_message }}</i>
-                            {% endif %}
-                            {% if t.info_message %}
-                            <br>
-                            <i>Info: {{ t.info_message }}</i>
-                            {% endif %}
-                        </li>
+                        {% for task in tasks %}
+                            <li class="list-group-item">
+                                {{ task.name }}
+                                ({{ task.job_status }})
+                                [<a href="/tasks/{{ task.id }}?action=delete">delete</a>]
+                                {% if task.error_message %}
+                                    <br>
+                                    <i style="color: red;">Error: {{ task.error_message }}</i>
+                                {% endif %}
+                                {% if task.info_message %}
+                                    <br>
+                                    <i>Info: {{ task.info_message }}</i>
+                                {% endif %}
+                            </li>
                         {% endfor %}
                     </ul>
                     <a href="/datasets/{{ dataset.id }}">Refresh task list</a>
                     <br>
                     <br>
-                    <form action="/datasets/{{ dataset.id }}/tasks/" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <label for="task_type">Choose the task type:</label>
-                        <select name="task_type" id="task_type">
-                            {% for task_type in task_types %}
-                            <option value="{{ task_type }}">{{ task_type }}</option>
-                            {% endfor %}
-                        </select>
-                        <br>
-                        <br>
-                        <button type="submit" class="btn btn-primary">Start new task</button>
-                    </form>
                     <b>Files</b>
                     <ul class="list-group">
                         {% for file_name in file_names %}

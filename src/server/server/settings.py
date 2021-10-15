@@ -4,15 +4,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-USE_DOCKER = True if int(os.environ.get('USE_DOCKER', '0')) == 1 else False
-
-if USE_DOCKER:
-    ROOT_DIR = os.environ.get('ROOT_DIR', '/data')
-else:
-    ROOT_DIR = os.environ.get('ROOT_DIR', '{}/data'.format(os.environ['HOME']))
+ROOT_DIR = os.environ.get('ROOT_DIR', '/tmp/webapp-template')
 os.makedirs(ROOT_DIR, exist_ok=True)
 
-SECRET_KEY = os.environ.get('SECRET_KEY', None)
+SECRET_KEY = os.environ.get('SECRET_KEY', '1234')
 
 DEBUG = False if int(os.environ.get('DEBUG', '0')) == 0 else True
 
@@ -67,7 +62,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
         'PORT': 5432,
     }
 }
@@ -79,10 +74,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-if USE_DOCKER:
-    FILE_UPLOAD_TEMP_DIR = '{}/files'.format(ROOT_DIR)
-else:
-    FILE_UPLOAD_TEMP_DIR = '/tmp'
+FILE_UPLOAD_TEMP_DIR = os.environ.get('FILE_UPLOAD_TEMP_DIR', '/tmp')
 os.makedirs(FILE_UPLOAD_TEMP_DIR, exist_ok=True)
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440 * 40  # 100mb

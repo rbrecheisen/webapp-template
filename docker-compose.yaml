@@ -20,10 +20,9 @@ services:
       - ROOT_DIR
       - SECRET_KEY
       - ALLOWED_HOSTS
-      - USE_DOCKER
       - DEBUG
       - WORKER_TIMEOUT
-      - DB_HOST
+      - POSTGRES_HOST
       - REDIS_HOST
     volumes:
       - ./docker-entrypoint.sh:/docker-entrypoint.sh
@@ -47,10 +46,9 @@ services:
       - ROOT_DIR
       - SECRET_KEY
       - ALLOWED_HOSTS
-      - USE_DOCKER
       - DEBUG
       - WORKER_TIMEOUT
-      - DB_HOST
+      - POSTGRES_HOST
       - REDIS_HOST
     volumes:
       - ./src/server:/src

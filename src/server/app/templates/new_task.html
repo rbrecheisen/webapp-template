@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="card" style="margin-top: 10px;">
+                <div class="card-header">
+                    New task<br>
+                </div>
+                <div class="card-body">
+                    <p style="margin-top: 10px"><a href="/tasks/">Back</a></p>
+                    <br>
+                    <form action="/tasks/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if form %}
+                            {{ form }}<br>
+                        {% else %}
+                            <i>No parameters required for this task</i><br>
+                        {% endif %}
+                        <br>
+                        <input type="hidden" name="dataset_id" value="{{ dataset.id }}">
+                        <input type="hidden" name="task_type" value="{{ task_type }}">
+                        <button type="submit" class="btn btn-primary">Start task</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

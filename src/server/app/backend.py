@@ -1,5 +1,7 @@
 import django_rq
+import zipfile
 
+from os.path import basename
 from django.utils import timezone
 from django.conf import settings
 from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
@@ -7,7 +9,8 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 from .models import *
-from .tasks import TaskUnknownError, TASK_REGISTRY
+from .tasks import TASK_REGISTRY, TASK_FORM_REGISTRY
+from .tasks.BaseTask import TaskUnknownError
 
 
 # DATASET MODEL
@@ -43,18 +46,6 @@ def rename_dataset_model(dataset, new_name):
     return dataset
 
 
-# def get_file_models(dataset):
-#     return FileModel.objects.filter(dataset=dataset).all()
-#
-#
-# def get_file_model(file_id):
-#     return FileModel.objects.get(pk=file_id)
-#
-#
-# def delete_file_model(f):
-#     f.delete()
-
-
 # FILE PATH MODEL
 
 def get_file_path_models(dataset):
@@ -83,6 +74,10 @@ def get_task_models_for_dataset(dataset):
     return TaskModel.objects.filter(dataset=dataset).all()
 
 
+def get_task_models():
+    return TaskModel.objects.all()
+
+
 def get_task_model(task_id):
     return TaskModel.objects.get(pk=task_id)
 
@@ -95,21 +90,24 @@ def get_task_types():
 
 # TASK
 
-def create_task(task_type, dataset):
-    if task_type in get_task_types():
-        task_model = TaskModel.objects.create(name=task_type, dataset=dataset)
+def create_task(parameters):
+    dataset = DataSetModel.objects.get(pk=parameters['dataset_id'])
+    if parameters['task_type'] in get_task_types():
+        task_model = TaskModel.objects.create(
+            name=parameters['task_type'], dataset=dataset, parameters=parameters)
         q = django_rq.get_queue('default')
         job = q.enqueue(execute_task, task_model)
         task_model.job_id = job.id
         task_model.job_status = 'queued'
         task_model.save()
+        return task_model
     else:
         raise TaskUnknownError()
 
 
 @django_rq.job
 def execute_task(task_model):
-    task = TASK_REGISTRY[task_model.name]
+    task = TASK_REGISTRY[task_model.name]()
     task.execute(task_model)
 
 
@@ -126,3 +124,24 @@ def cancel_and_delete_task(task_model):
     except NoSuchJobError:
         pass
     task_model.delete()
+
+
+def get_task_form(task_type):
+    cls = TASK_FORM_REGISTRY[task_type]
+    if cls:
+        return TASK_FORM_REGISTRY[task_type]()
+    else:
+        return None
+
+
+def get_zipped_download(dataset):
+    file_path = '/tmp/{}.zip'.format(dataset.name)
+    with zipfile.ZipFile(file_path, 'w') as zip_obj:
+        files = get_file_path_models(dataset)
+        for f in files:
+            fp = f.file_path
+            zip_obj.write(fp, arcname=basename(fp))
+    # Save ZIP file path in dataset so ZIP file is deleted when dataset is deleted
+    dataset.zip_file_path = file_path
+    dataset.save()
+    return file_path
