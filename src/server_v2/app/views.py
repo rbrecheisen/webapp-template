@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
 
 from .backend import get_dataset_models, get_dataset_model, create_dataset_model_from_files, \
-    delete_dataset_model, rename_dataset_model
+    delete_dataset_model, rename_dataset_model, get_file_names
 
 
 @login_required
@@ -23,7 +23,8 @@ def get_datasets(request):
 @login_required
 @require_http_methods(['GET'])
 def get_dataset(request, dataset_id):
-    return render(request, 'dataset.html', context={'dataset': get_dataset_model(dataset_id)})
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(dataset_id), 'file_names': get_file_names(dataset_id)})
 
 
 @login_required
@@ -31,15 +32,16 @@ def get_dataset(request, dataset_id):
 def create_dataset(request):
     files = request.FILES.getlist('files')
     dataset = create_dataset_model_from_files(files, request.user)
-    return render(request, 'dataset.html', context={'dataset': dataset})
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(dataset.id), 'file_names': get_file_names(dataset.id)})
 
 
 @login_required
 @require_http_methods(['POST'])
 def rename_dataset(request, dataset_id):
-    rename_dataset_model(dataset_id, request.POST.get('new_name', None))
+    dataset = rename_dataset_model(dataset_id, request.POST.get('new_name', None))
     return render(request, 'dataset.html', context={
-        'dataset': get_dataset_model(dataset_id), 'renamed': True})
+        'dataset': get_dataset_model(dataset.id), 'file_names': get_file_names(dataset.id), 'renamed': True})
 
 
 @login_required

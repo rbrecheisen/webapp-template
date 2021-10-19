@@ -94,11 +94,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-FILE_UPLOAD_TEMP_DIR = os.environ.get('FILE_UPLOAD_TEMP_DIR', '/tmp/webapp-template/uploads')
-os.makedirs(FILE_UPLOAD_TEMP_DIR, exist_ok=True)
-
-FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440 * 40  # 100mb
-
 WORKER_TIMEOUT = int(os.environ.get('WORKER_TIMEOUT', '500'))
 
 RQ_QUEUES = {

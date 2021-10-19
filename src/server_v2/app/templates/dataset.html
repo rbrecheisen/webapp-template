@@ -51,13 +51,15 @@
                         <i>None available</i><br>
                         <br>
                     {% endif %}
-                    {% if files %}
-                        <b>Files</b>
+                    <b>Files in dataset</b><br>
+                    {% if file_names %}
                         <ul class="list-group">
                             {% for file_name in file_names %}
                             <li class="list-group-item">{{ file_name }}</li>
                             {% endfor %}
                         </ul>
+                    {% else %}
+                        <i>None available</i><br>
                     {% endif %}
                 </div>
             </div>

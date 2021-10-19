@@ -34,8 +34,22 @@ def rename_dataset_model(dataset_id, new_name):
     dataset = get_dataset_model(dataset_id)
     dataset.name = new_name
     dataset.save()
+    return dataset
 
 
 def delete_dataset_model(dataset_id):
     dataset = get_dataset_model(dataset_id)
     dataset.delete()
+
+
+def get_file_path_models(dataset_id):
+    dataset = get_dataset_model(dataset_id)
+    return FilePathModel.objects.filter(dataset=dataset)
+
+
+def get_file_names(dataset_id):
+    file_path_models = get_file_path_models(dataset_id)
+    file_names = []
+    for fp in file_path_models:
+        file_names.append(os.path.split(fp.path)[1])
+    return file_names
