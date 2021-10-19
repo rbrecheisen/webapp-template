@@ -1,25 +1,18 @@
 import os
-import requests
 
-from .utils import get_token
+from .utils import ApiHelper
 
 
 def test_datasets():
-    # TODO: use utils.Api
-    token = get_token('ralph', 'arturo4ever')
-    files = {}
+    api = ApiHelper('http://localhost:8000/api', 'ralph', 'arturo4ever')
+    api.create_token()
+    file_paths = []
     for f in os.listdir('data'):
-        files[f] = open(os.path.join('data', f), 'rb')
-    response = requests.post(
-        'http://localhost:8000/api/datasets/create', headers={'Authorization': 'Token {}'.format(token)}, files=files)
-    assert response.status_code == 201
+        file_paths.append(os.path.join('data', f))
+    response = api.post_files('/datasets/create', file_paths)
     assert response.json()['name'] != ''
-    response = requests.get('http://localhost:8000/api/datasets/', headers={'Authorization': 'Token {}'.format(token)})
-    assert response.status_code == 200
+    response = api.get('/datasets/')
     assert len(response.json()) > 0
     items = response.json()
     for item in items:
-        response = requests.delete(
-            'http://localhost:8000/api/datasets/{}/delete'.format(item['id']),
-            headers={'Authorization': 'Token {}'.format(token)})
-        assert response.status_code == 200
+        api.delete('/datasets/{}'.format(item['id']))

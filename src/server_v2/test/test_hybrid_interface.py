@@ -1,17 +1,17 @@
-import requests
-
-from .utils import get_token
+from .utils import ApiHelper
 
 
 def test_api():
-    token = get_token('ralph', 'arturo4ever')
-    response = requests.get('http://localhost:8000/api/', headers={'Authorization': 'Token {}'.format(token)})
+    api = ApiHelper('http://localhost:8000/api', 'ralph', 'arturo4ever')
+    api.create_token()
+    response = api.get('/')
     assert response.json()['message'] == 'Hello!'
 
 
 def test_html():
+    import requests
     response = requests.get('http://0.0.0.0:8000/login/', params={'username': 'ralph', 'password': 'arturo4ever'})
     assert response.status_code == 200
     response = requests.get('http://0.0.0.0:8000/', cookies=response.cookies)
     assert response.status_code == 200
-    assert 'Hello!' in response.text
+    assert 'Maastricht University' in response.text
