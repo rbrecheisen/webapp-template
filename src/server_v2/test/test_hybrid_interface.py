@@ -8,14 +8,15 @@ def get_token(username, password):
 
 
 ########################################################################################################################
-# TESTS
 def test_api():
     token = get_token('ralph', 'arturo4ever')
-    response = requests.get('http://localhost:8000?format=json', headers={'Authorization': 'Token {}'.format(token)})
+    response = requests.get('http://localhost:8000/api/', headers={'Authorization': 'Token {}'.format(token)})
     assert response.json()['message'] == 'Hello!'
 
 
 def test_html():
-    token = get_token('ralph', 'arturo4ever')
-    response = requests.get('http://localhost:8000?format=html', headers={'Authorization': 'Token {}'.format(token)})
+    response = requests.get('http://0.0.0.0:8000/login/', params={'username': 'ralph', 'password': 'arturo4ever'})
+    assert response.status_code == 200
+    response = requests.get('http://0.0.0.0:8000/', cookies=response.cookies)
+    assert response.status_code == 200
     assert 'Hello!' in response.text
