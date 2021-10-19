@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -11,7 +11,7 @@ from .backend import get_dataset_models, get_dataset_model, create_dataset_model
 @login_required
 @require_http_methods(['GET'])
 def index(request):
-    return render(request, 'index.html', context={'message': 'Hello!'})
+    return redirect('/datasets/')
 
 
 @login_required
@@ -35,14 +35,15 @@ def create_dataset(request):
 
 
 @login_required
-@require_http_methods(['PUT'])
+@require_http_methods(['POST'])
 def rename_dataset(request, dataset_id):
-    rename_dataset_model(dataset_id, request.PUT.get('new_name', None))
-    return render(request, 'dataset.html', context={'dataset': get_dataset_model(dataset_id)})
+    rename_dataset_model(dataset_id, request.POST.get('new_name', None))
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(dataset_id), 'renamed': True})
 
 
 @login_required
-@require_http_methods(['DELETE'])
+@require_http_methods(['GET'])
 def delete_dataset(request, dataset_id):
     delete_dataset_model(dataset_id)
     return render(request, 'datasets.html', context={'datasets': get_dataset_models(request.user)})

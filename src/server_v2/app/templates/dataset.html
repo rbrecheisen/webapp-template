@@ -16,38 +16,49 @@
                         <input type="text" name="new_name" id="new_name" value="{{ dataset.name }}" size="100">
                         <br>
                         <br>
-                        <button type="submit" class="btn btn-primary">Rename get_dataset</button>
+                        <button type="submit" class="btn btn-primary">Rename dataset</button>
                     </form>
+                    {% if renamed %}
+                        <b style="color: green;">Dataset successfully renamed</b><br>
+                        <br>
+                    {% endif %}
                     <a href="/download/{{ get_dataset.id }}">Download get_dataset files</a>
                     <br>
                     <br>
-                    <b>Tasks for this dataset</b>
-                    <ul class="list-group">
-                        {% for task in tasks %}
-                            <li class="list-group-item">
-                                {{ task.name }}
-                                ({{ task.job_status }})
-                                [<a href="/tasks/{{ task.id }}/delete">delete</a>]
-                                {% if task.errors %}
-                                    <br>
-                                    <i style="color: red;">Error: {{ task.errors }}</i>
-                                {% endif %}
-                                {% if task.info %}
-                                    <br>
-                                    <i>Info: {{ task.info }}</i>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <a href="/datasets/{{ dataset.id }}">Refresh task list</a>
-                    <br>
-                    <br>
-                    <b>Files</b>
-                    <ul class="list-group">
-                        {% for file_name in file_names %}
-                        <li class="list-group-item">{{ file_name }}</li>
-                        {% endfor %}
-                    </ul>
+                    <b>Tasks using this dataset</b><br>
+                    {% if tasks %}
+                        <ul class="list-group">
+                            {% for task in tasks %}
+                                <li class="list-group-item">
+                                    {{ task.name }}
+                                    ({{ task.job_status }})
+                                    [<a href="/tasks/{{ task.id }}/delete">delete</a>]
+                                    {% if task.errors %}
+                                        <br>
+                                        <i style="color: red;">Error: {{ task.errors }}</i>
+                                    {% endif %}
+                                    {% if task.info %}
+                                        <br>
+                                        <i>Info: {{ task.info }}</i>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="/datasets/{{ dataset.id }}">Refresh task list</a>
+                        <br>
+                        <br>
+                    {% else %}
+                        <i>None available</i><br>
+                        <br>
+                    {% endif %}
+                    {% if files %}
+                        <b>Files</b>
+                        <ul class="list-group">
+                            {% for file_name in file_names %}
+                            <li class="list-group-item">{{ file_name }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>

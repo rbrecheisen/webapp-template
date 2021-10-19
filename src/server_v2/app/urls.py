@@ -7,6 +7,7 @@ urlpatterns = [
     path('datasets/', views.get_datasets),
     path('datasets/create', views.create_dataset),
     path('datasets/<str:dataset_id>', views.get_dataset),
+    path('datasets/<str:dataset_id>/rename', views.rename_dataset),
     path('datasets/<str:dataset_id>/delete', views.delete_dataset),
     path('login/', views.handle_login),
     path('api/', api.index),
