@@ -6,6 +6,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 
 urlpatterns = [
+    path('accounts/', include('django.contrib.auth.urls')),
     path('token-requests/', obtain_auth_token, name='token_requests'),
     path('session_security/', include('session_security.urls')),
     path('admin/', admin.site.urls),
