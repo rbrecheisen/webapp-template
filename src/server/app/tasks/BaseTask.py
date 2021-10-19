@@ -17,8 +17,8 @@ class Task:
 
     @staticmethod
     def create_output_dataset(task_model):
-        ds_name = '{}-{}'.format(task_model.dataset.name, task_model.name)
-        ds = DataSetModel.objects.create(name=ds_name, owner=task_model.dataset.owner)
+        ds_name = '{}-{}'.format(task_model.get_dataset.name, task_model.name)
+        ds = DataSetModel.objects.create(name=ds_name, owner=task_model.get_dataset.owner)
         return ds
 
     @staticmethod

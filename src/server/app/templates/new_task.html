@@ -18,7 +18,7 @@
                             <i>No parameters required for this task</i><br>
                         {% endif %}
                         <br>
-                        <input type="hidden" name="dataset_id" value="{{ dataset.id }}">
+                        <input type="hidden" name="dataset_id" value="{{ get_dataset.id }}">
                         <input type="hidden" name="task_type" value="{{ task_type }}">
                         <button type="submit" class="btn btn-primary">Start task</button>
                     </form>

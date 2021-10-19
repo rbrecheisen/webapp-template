@@ -6,7 +6,7 @@
             <div class="card" style="margin-top: 10px;">
                 <div class="card-header">Tasks</div>
                 <div class="card-body">
-                    <a href="/datasets/">Datasets</a><br>
+                    <a href="/get_datasets/">Datasets</a><br>
                     <br>
                     <b>All tasks</b>
                     <ul class="list-group">
@@ -39,15 +39,15 @@
                         </select>
                         <br>
                         <br>
-                        <label for="task_type">Choose dataset:</label><br>
+                        <label for="task_type">Choose get_dataset:</label><br>
                         <select name="dataset_id" id="dataset_id">
-                            {% for dataset in datasets %}
-                                <option value="{{ dataset.id }}">{{ dataset.name }}</option>
+                            {% for get_dataset in get_datasets %}
+                                <option value="{{ get_dataset.id }}">{{ get_dataset.name }}</option>
                             {% endfor %}
                         </select>
                         <br>
                         <br>
-                        <button type="submit" class="btn btn-primary">Create new task for dataset</button>
+                        <button type="submit" class="btn btn-primary">Create new task for get_dataset</button>
                     </form>
                 </div>
             </div>

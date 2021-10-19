@@ -4,6 +4,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseForbidden
 
+from .backend import get_dataset_models, get_dataset_model, create_dataset_model_from_files, \
+    delete_dataset_model, rename_dataset_model
+
 
 @login_required
 @require_http_methods(['GET'])
@@ -27,3 +30,37 @@ def handle_login(request):
             return HttpResponse('authenticated')
         return HttpResponseForbidden('wrong username or password')
     return HttpResponseForbidden('wrong method')
+
+
+@login_required
+@require_http_methods(['GET'])
+def get_datasets(request):
+    return render(request, 'get_datasets.html', context={'datasets': get_dataset_models(request.user)})
+
+
+@login_required
+@require_http_methods(['GET'])
+def get_dataset(request, dataset_id):
+    return render(request, 'get_dataset.html', context={'dataset': get_dataset_model(dataset_id)})
+
+
+@login_required
+@require_http_methods(['POST'])
+def create_dataset(request):
+    files = request.FILES.getlist('files')
+    dataset = create_dataset_model_from_files(files, request.user)
+    return render(request, 'get_dataset.html', context={'dataset': dataset})
+
+
+@login_required
+@require_http_methods(['PUT'])
+def rename_dataset(request, dataset_id):
+    rename_dataset_model(dataset_id, request.PUT.get('new_name', None))
+    return render(request, 'get_dataset.html', context={'dataset': get_dataset_model(dataset_id)})
+
+
+@login_required
+@require_http_methods(['DELETE'])
+def delete_dataset(request, dataset_id):
+    delete_dataset_model(dataset_id)
+    return render(request, 'get_datasets.html', context={'datasets': get_dataset_models(request.user)})
