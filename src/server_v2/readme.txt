@@ -1,0 +1,2 @@
+- This version of the server should support both REST and HTML for better testability
+- It should also have a package directory for each task

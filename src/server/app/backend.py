@@ -13,8 +13,8 @@ from .tasks import TASK_REGISTRY, TASK_FORM_REGISTRY
 from .tasks.BaseTask import TaskUnknownError
 
 
+########################################################################################################################
 # DATASET MODEL
-
 def get_dataset_models():
     return DataSetModel.objects.all()
 
@@ -46,8 +46,8 @@ def rename_dataset_model(dataset, new_name):
     return dataset
 
 
+########################################################################################################################
 # FILE PATH MODEL
-
 def get_file_path_models(dataset):
     return FilePathModel.objects.filter(dataset=dataset).all()
 
@@ -68,8 +68,8 @@ def delete_file_path_model(fp):
     fp.delete()
 
 
+########################################################################################################################
 # TASK MODEL
-
 def get_task_models_for_dataset(dataset):
     return TaskModel.objects.filter(dataset=dataset).all()
 
@@ -82,14 +82,14 @@ def get_task_model(task_id):
     return TaskModel.objects.get(pk=task_id)
 
 
+########################################################################################################################
 # TASK TYPE
-
 def get_task_types():
     return TASK_REGISTRY.keys()
 
 
+########################################################################################################################
 # TASK
-
 def create_task(parameters):
     dataset = DataSetModel.objects.get(pk=parameters['dataset_id'])
     if parameters['task_type'] in get_task_types():
@@ -134,6 +134,8 @@ def get_task_form(task_type):
         return None
 
 
+########################################################################################################################
+# DOWNLOAD
 def get_zipped_download(dataset):
     file_path = '/tmp/{}.zip'.format(dataset.name)
     with zipfile.ZipFile(file_path, 'w') as zip_obj:

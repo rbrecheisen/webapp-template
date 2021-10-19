@@ -1,4 +1,5 @@
 django==3.2.3
+djangorestframework
 django-session-security==2.6.6
 gunicorn==20.1.0
 barbell2light
