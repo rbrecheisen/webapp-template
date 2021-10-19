@@ -26,7 +26,7 @@ def create_dataset_model_from_files(files, user):
             file_path = os.path.join(settings.MEDIA_ROOT, file_path)
         else:
             file_path = f
-        FilePathModel.objects.create(file_path=file_path, dataset=dataset)
+        FilePathModel.objects.create(path=file_path, dataset=dataset)
     return dataset
 
 

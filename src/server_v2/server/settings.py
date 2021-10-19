@@ -2,6 +2,8 @@ import os
 
 from pathlib import Path
 
+SITE_ID = 1
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ROOT_DIR = os.environ.get('ROOT_DIR', '/tmp/webapp-template')
