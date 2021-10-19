@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from .backend import get_dataset_models, get_dataset_model, create_dataset_model_from_files, \
     delete_dataset_model, rename_dataset_model
-from .serializers import DataSetModelSerializer
+from .backend import get_task_models, get_task_model, create_task_model, delete_task_model, start_task, stop_task
+from .serializers import DataSetModelSerializer, TaskModelSerializer
 
 
 @api_view(['GET'])
@@ -44,20 +45,43 @@ def rename_dataset(request, dataset_id):
     return Response(serializer.data)
 
 
-@api_view(['GET', 'DELETE'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_dataset(request, dataset_id):
     delete_dataset_model(dataset_id)
     return Response({'message': 'Dataset {} deleted'.format(dataset_id)})
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def tasks(request):
-    pass
+def get_tasks(request, dataset_id):
+    serializer = TaskModelSerializer(get_task_models(dataset_id))
+    return Response(serializer.data)
 
 
-@api_view(['GET', 'DELETE'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def task(request):
+def create_task(request, dataset_id):
+    task = create_task_model(dataset_id, dict(request.POST.items()))
+    serializer = TaskModelSerializer(task)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_task(request, task_id):
+    serializer = TaskModelSerializer(get_task_model(task_id))
+    return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_task(request, task_id):
+    delete_task_model(task_id)
+    return Response({'message': 'Task {} deleted'.format(task_id)})
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def start_task(request, task_id):
     pass

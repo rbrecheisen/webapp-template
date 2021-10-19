@@ -8,6 +8,8 @@ class ApiHelper:
 
     def __init__(self, base_url, username, password):
         self.base_url = base_url
+        if self.base_url.endswith('/'):
+            self.base_url = self.base_url[:-1]
         self.username = username
         self.password = password
         self.token = self.create_token()
@@ -20,6 +22,8 @@ class ApiHelper:
         return response.json()['token']
 
     def get(self, endpoint):
+        if not endpoint.startswith('/'):
+            endpoint = '/{}'.format(endpoint)
         response = requests.get(
             '{}{}'.format(self.base_url, endpoint),
             headers={'Authorization': 'Token {}'.format(self.token)})
@@ -27,6 +31,8 @@ class ApiHelper:
         return response
 
     def post_files(self, endpoint, file_paths):
+        if not endpoint.startswith('/'):
+            endpoint = '/{}'.format(endpoint)
         files = {}
         for file_path in file_paths:
             files[os.path.split(file_path)[1]] = open(file_path, 'rb')
@@ -37,6 +43,8 @@ class ApiHelper:
         return response
 
     def delete(self, endpoint):
+        if not endpoint.startswith('/'):
+            endpoint = '/{}'.format(endpoint)
         response = requests.delete(
             '{}{}/delete'.format(self.base_url, endpoint),
             headers={'Authorization': 'Token {}'.format(self.token)})

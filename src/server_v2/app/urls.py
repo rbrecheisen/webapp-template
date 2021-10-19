@@ -19,4 +19,9 @@ urlpatterns = [
     path('api/datasets/<str:dataset_id>', api.get_dataset),
     path('api/datasets/<str:dataset_id>/rename', api.rename_dataset),
     path('api/datasets/<str:dataset_id>/delete', api.delete_dataset),
+    path('api/datasets/<str:dataset_id>/tasks/', api.get_tasks),
+    path('api/datasets/<str:dataset_id>/tasks/create', api.create_task),
+    path('api/tasks/<str:task_id>', api.get_task),
+    path('api/tasks/<str:task_id>/start', api.start_task),
+    path('api/tasks/<str:task_id>/delete', api.delete_task),
 ]
