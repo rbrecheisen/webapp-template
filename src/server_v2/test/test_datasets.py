@@ -18,5 +18,7 @@ def test_datasets():
     assert len(response.json()) > 0
     items = response.json()
     for item in items:
-        response = requests.delete('http://localhost:8000/api/datasets/{}/delete'.format(item['id']))
-        # assert response.status_code == 200
+        response = requests.delete(
+            'http://localhost:8000/api/datasets/{}/delete'.format(item['id']),
+            headers={'Authorization': 'Token {}'.format(token)})
+        assert response.status_code == 200

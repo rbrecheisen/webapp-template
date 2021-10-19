@@ -44,7 +44,7 @@ def rename_dataset(request, dataset_id):
     return Response(serializer.data)
 
 
-@api_view(['DELETE'])
+@api_view(['GET', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_dataset(request, dataset_id):
     delete_dataset_model(dataset_id)
