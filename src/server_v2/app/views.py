@@ -92,7 +92,6 @@ def delete_task(request, task_id):
 def start_task(request, task_id):
     task = get_task_model(task_id)
     task.parameters = dict(request.POST.items())
-    # task.save()
     task = start_task_in_background(task)
     return render(request, 'dataset.html', context={
         'dataset': get_dataset_model(task.dataset.id),

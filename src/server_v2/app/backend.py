@@ -20,6 +20,7 @@ def get_dataset_model(dataset_id):
 
 
 def create_dataset_model_from_files(files, user):
+    # TODO: create randomly named sub-directories for each dataset to avoid naming conflicts
     timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
     dataset = DataSetModel.objects.create(name='dataset-{}'.format(timestamp), owner=user)
     for f in files:

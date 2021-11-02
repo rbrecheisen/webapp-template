@@ -1,5 +1,8 @@
 TODO
 ====
+
+- Each uploaded dataset gets its own sub-directory
+
 - Implement following tasks:
     - CheckDICOM
     - MatchL3AndTAGFiles
@@ -7,5 +10,7 @@ TODO
     - ValidateBodyCompositionModel
     - ConvertToRaw
     - UploadToXNAT
+
+- Add page for viewing Docker logs
 
 [x] Implement task-specific HTML pages for additional parameters
