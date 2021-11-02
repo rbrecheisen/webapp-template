@@ -1,3 +1,11 @@
 TODO
 ====
-- Implement task-specific HTML pages for additional parameters
+- Implement following tasks:
+    - CheckDICOM
+    - MatchL3AndTAGFiles
+    - PredictBodyCompositionScores
+    - ValidateBodyCompositionModel
+    - ConvertToRaw
+    - UploadToXNAT
+
+[x] Implement task-specific HTML pages for additional parameters
