@@ -32,14 +32,11 @@
                                 <li class="list-group-item">
                                     <a href="/tasks/{{ task.id }}">{{ task.name }}</a>
                                     ({{ task.job_status }})
-                                    [<a href="/tasks/{{ task.id }}/delete">delete</a>]
+                                    [<a href="/tasks/{{ task.id }}/delete">delete</a>]<br>
                                     {% if task.errors %}
-                                        <br>
-                                        <i style="color: red;">Error: {{ task.errors }}</i>
-                                    {% endif %}
-                                    {% if task.info %}
-                                        <br>
-                                        <i>Info: {{ task.info }}</i>
+                                        {% for error in task.errors %}
+                                            <i style="color: red;">{{ error }}</i><br>
+                                        {% endfor %}
                                     {% endif %}
                                 </li>
                             {% endfor %}

@@ -11,3 +11,4 @@ django-rq
 redis
 rq
 requests
+pydicom

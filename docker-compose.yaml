@@ -15,7 +15,7 @@ services:
     build: .
     image: surgerymumc/webapp-template:latest
     container_name: server_web
-    command: bash -c "/docker-entrypoint.sh"
+#    command: bash -c "/docker-entrypoint.sh"
     environment:
       - ROOT_DIR
       - SECRET_KEY
@@ -25,7 +25,7 @@ services:
       - POSTGRES_HOST
       - REDIS_HOST
     volumes:
-      - ./docker-entrypoint.sh:/docker-entrypoint.sh
+#      - ./docker-entrypoint.sh:/docker-entrypoint.sh
       - ./src/server_v2:/src
       - data:/data
     depends_on:

@@ -105,7 +105,7 @@ RQ_QUEUES = {
     }
 }
 
-FILE_UPLOAD_TEMP_DIR = '/tmp/webapp-template'
+FILE_UPLOAD_TEMP_DIR = os.environ.get('FILE_UPLOAD_TEMP_DIR', '/tmp')
 os.makedirs(FILE_UPLOAD_TEMP_DIR, exist_ok=True)
 
 LANGUAGE_CODE = 'en-us'

@@ -20,19 +20,12 @@ def get_dataset_model(dataset_id):
 
 
 def create_dataset_model_from_files(files, user):
-    # TODO: create randomly named sub-directories for each dataset to avoid naming conflicts
     timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
     dataset = DataSetModel.objects.create(name='dataset-{}'.format(timestamp), owner=user)
-    # TODO: create random name
-    # random_name = 'ajforu039ueqfa'
     for f in files:
         if isinstance(f, InMemoryUploadedFile) or isinstance(f, TemporaryUploadedFile):
-            # file_path = default_storage.save('{}/{}'.format(random_name, f.name), ContentFile(f.read()))
-            # os.makedirs(file_path, exist=False)
             file_path = default_storage.save(f.name, ContentFile(f.read()))
-            print('file_path = {}'.format(file_path))
             file_path = os.path.join(settings.MEDIA_ROOT, file_path)
-            print('file_path = {}'.format(file_path))
         else:
             file_path = f
         FilePathModel.objects.create(path=file_path, dataset=dataset)

@@ -1,8 +1,7 @@
 TODO
 ====
 
-- Each uploaded dataset gets its own sub-directory
-  see: backend.py:26
+- Implement tasks as (up)loadable plugins
 
 - Implement following tasks:
     - CheckDICOM
