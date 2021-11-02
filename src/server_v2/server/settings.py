@@ -105,6 +105,9 @@ RQ_QUEUES = {
     }
 }
 
+FILE_UPLOAD_TEMP_DIR = '/tmp/webapp-template'
+os.makedirs(FILE_UPLOAD_TEMP_DIR, exist_ok=True)
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'

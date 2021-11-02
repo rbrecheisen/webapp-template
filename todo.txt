@@ -2,6 +2,7 @@ TODO
 ====
 
 - Each uploaded dataset gets its own sub-directory
+  see: backend.py:26
 
 - Implement following tasks:
     - CheckDICOM
