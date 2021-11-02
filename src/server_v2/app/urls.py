@@ -5,13 +5,21 @@ from . import views, api
 
 
 urlpatterns = [
+
+    # HTML
     path('', views.index),
     path('datasets/', views.get_datasets),
     path('datasets/create', views.create_dataset),
     path('datasets/<str:dataset_id>', views.get_dataset),
     path('datasets/<str:dataset_id>/rename', views.rename_dataset),
     path('datasets/<str:dataset_id>/delete', views.delete_dataset),
+    path('datasets/<str:dataset_id>/tasks/create', views.create_task),
+    path('tasks/<str:task_id>', views.get_task),
+    path('tasks/<str:task_id>/start', views.start_task),
+    path('tasks/<str:task_id>/delete', views.delete_task),
     path('login/', views.handle_login),
+
+    # API
     path('api/tokens/', obtain_auth_token, name='tokens'),
     path('api/', api.index),
     path('api/datasets/', api.get_datasets),

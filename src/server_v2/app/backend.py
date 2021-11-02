@@ -8,7 +8,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 from .models import DataSetModel, FilePathModel, TaskModel
-from .tasks import TaskNameUnknownError
+from .tasks import TASK_REGISTRY
 
 
 def get_dataset_models(user):
@@ -57,34 +57,60 @@ def get_file_names(dataset_id):
     return file_names
 
 
+def get_task_classes():
+    return TASK_REGISTRY.keys()
+
+
 def get_task_models(dataset_id):
     dataset = get_dataset_model(dataset_id)
     return TaskModel.objects.filter(dataset=dataset).all()
 
 
-def create_task_model(dataset_id, parameters):
-    dataset = get_dataset_model(dataset_id)
-    if 'task_name' in parameters.keys():
-        task_model = TaskModel.objects.create(
-            name=parameters['task_name'], dataset=dataset, parameters=parameters)
-        q = django_rq.get_queue('default')
-        job = q.enqueue(start_task, task_model)
-        task_model.job_id = job.id
-        task_model.job_status = 'queued'
-        task_model.save()
-        return task_model
-    else:
-        raise TaskNameUnknownError()
+def create_task_model(dataset, task_class):
+    timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
+    task_model = TaskModel.objects.create(
+        name='{}-{}'.format(task_class, timestamp), class_name=task_class, dataset=dataset)
+    return task_model
 
 
 def get_task_model(task_id):
     return TaskModel.objects.get(pk=task_id)
 
 
+def get_task_class(task_id):
+    task = get_task_model(task_id)
+    task_class = TASK_REGISTRY[task.class_name]['class']
+    return task_class
+
+
+def get_task_form(task_id):
+    task = get_task_model(task_id)
+    task_form = TASK_REGISTRY[task.class_name]['form_class']()
+    return task_form
+
+
+def rename_task_model(task_id, new_name):
+    task = get_task_model(task_id)
+    task.name = new_name
+    task.save()
+    return task
+
+
 def delete_task_model(task_id):
-    pass
+    task = get_task_model(task_id)
+    task.delete()
+
+
+def start_task_in_background(task_model):
+    q = django_rq.get_queue('default')
+    job = q.enqueue(start_task_job, task_model)
+    task_model.job_id = job.id
+    task_model.job_status = 'queued'
+    task_model.save()
+    return task_model
 
 
 @django_rq.job
-def start_task(task_model):
-    pass
+def start_task_job(task_model):
+    task = get_task_class(task_model.id)()
+    task.execute(task_model)

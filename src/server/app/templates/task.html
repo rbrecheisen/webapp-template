@@ -6,10 +6,10 @@
             <div class="card" style="margin-top: 10px;">
                 <div class="card-header">
                     Task <b>{{ task.name }}</b><br>
-                    [<a href="/tasks/{{ task.id }}?action=delete">delete</a>]
+                    [<a href="/dataset/{{ dataset.id }}/tasks/{{ task.id }}?action=delete">delete</a>]
                 </div>
                 <div class="card-body">
-                    <p style="margin-top: 10px"><a href="/tasks/">Back</a></p>
+                    <p style="margin-top: 10px"><a href="/dataset/{{ dataset.id }}">Back</a></p>
                 </div>
             </div>
         </div>

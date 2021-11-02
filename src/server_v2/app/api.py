@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .backend import get_dataset_models, get_dataset_model, create_dataset_model_from_files, \
     delete_dataset_model, rename_dataset_model
-from .backend import get_task_models, get_task_model, create_task_model, delete_task_model, start_task, stop_task
+from .backend import get_task_models, get_task_model, create_task_model, delete_task_model
 from .serializers import DataSetModelSerializer, TaskModelSerializer
 
 
@@ -81,7 +81,8 @@ def delete_task(request, task_id):
     return Response({'message': 'Task {} deleted'.format(task_id)})
 
 
-@api_view(['PUT'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def start_task(request, task_id):
+    # TODO: get parameters as dict and pass to task
     pass

@@ -6,7 +6,6 @@ from django.dispatch import receiver
 
 
 class DataSetModel(models.Model):
-
     name = models.CharField(max_length=1024, editable=True, null=False)
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(
@@ -15,14 +14,13 @@ class DataSetModel(models.Model):
 
 
 class FilePathModel(models.Model):
-
     path = models.CharField(max_length=2048, editable=True, null=False)
     dataset = models.ForeignKey(DataSetModel, on_delete=models.CASCADE)
 
 
 class TaskModel(models.Model):
-
     name = models.CharField(max_length=1024, editable=True, null=False)
+    class_name = models.CharField(max_length=1024, null=False)
     parameters = models.JSONField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     job_id = models.CharField(max_length=128, null=True)

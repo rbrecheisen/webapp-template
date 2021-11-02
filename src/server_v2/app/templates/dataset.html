@@ -22,7 +22,7 @@
                         <b style="color: green;">Dataset successfully renamed</b><br>
                         <br>
                     {% endif %}
-                    <a href="/download/{{ get_dataset.id }}">Download get_dataset files</a>
+                    <a href="/download/{{ dataset.id }}">Download dataset as ZIP file</a>
                     <br>
                     <br>
                     <b>Tasks using this dataset</b><br>
@@ -30,7 +30,7 @@
                         <ul class="list-group">
                             {% for task in tasks %}
                                 <li class="list-group-item">
-                                    {{ task.name }}
+                                    <a href="/tasks/{{ task.id }}">{{ task.name }}</a>
                                     ({{ task.job_status }})
                                     [<a href="/tasks/{{ task.id }}/delete">delete</a>]
                                     {% if task.errors %}
@@ -50,7 +50,21 @@
                     {% else %}
                         <i>None available</i><br>
                         <br>
+                        <br>
                     {% endif %}
+                    <form action="/datasets/{{ dataset.id }}/tasks/create" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="task_class">To create a new task, choose one from the list:</label><br>
+                        <select name="task_class" id="task_class">
+                            {% for task_class in task_classes %}
+                                <option value="{{ task_class }}">{{ task_class }}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Create task</button>
+                    </form>
+                    <br>
                     <b>Files in dataset</b><br>
                     {% if file_names %}
                         <ul class="list-group">
