@@ -33,10 +33,14 @@
                                     <a href="/tasks/{{ task.id }}">{{ task.name }}</a>
                                     ({{ task.job_status }})
                                     [<a href="/tasks/{{ task.id }}/delete">delete</a>]<br>
-                                    {% if task.errors %}
-                                        {% for error in task.errors %}
-                                            <i style="color: red;">{{ error }}</i><br>
-                                        {% endfor %}
+                                    {% if task.job_status == "finished" %}
+                                        {% if task.errors %}
+                                            {% for error in task.errors %}
+                                                <i style="color: red;">{{ error }}</i><br>
+                                            {% endfor %}
+                                        {% else %}
+                                            <i style="color: green;">Task completed successfully</i><br>
+                                        {% endif %}
                                     {% endif %}
                                 </li>
                             {% endfor %}
