@@ -12,5 +12,6 @@ TODO
     -   UploadToXNAT
 
 - Add page for viewing Docker logs
+- Add web app title to environment variables and settings.py (set in base.html)
 
 [x] Implement task-specific HTML pages for additional parameters
