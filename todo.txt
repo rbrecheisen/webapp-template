@@ -5,11 +5,11 @@ TODO
 
 - Implement following tasks:
     [x] CheckDICOM
-    - MatchL3AndTAGFiles
-    - PredictBodyCompositionScores
-    - ValidateBodyCompositionModel
-    - ConvertToRaw
-    - UploadToXNAT
+    -   MatchL3AndTAGFiles
+    -   PredictBodyCompositionScores
+    -   ValidateBodyCompositionModel
+    -   ConvertToRaw
+    -   UploadToXNAT
 
 - Add page for viewing Docker logs
 
