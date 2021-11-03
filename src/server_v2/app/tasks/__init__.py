@@ -2,6 +2,7 @@ from .simpletask import SimpleTask, SimpleTaskForm
 from .printdatasettask import PrintDataSetTask, PrintDataSetTaskForm
 from .copydatasettask import CopyDataSetTask, CopyDataSetTaskForm
 from .checkdicomtask import CheckDicomTask, CheckDicomTaskForm
+from .checktagfiletask import CheckTagFileTask, CheckDicomTaskForm
 
 
 TASK_REGISTRY = {
@@ -13,4 +14,6 @@ TASK_REGISTRY = {
         'class': CopyDataSetTask, 'form_class': CopyDataSetTaskForm},
     'CheckDicomTask': {
         'class': CheckDicomTask, 'form_class': CheckDicomTaskForm},
+    'CheckTagFileTask': {
+        'class': CheckTagFileTask, 'form_class': CheckTagFileTaskForm},
 }
