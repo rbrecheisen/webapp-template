@@ -2,11 +2,12 @@ import os
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.dispatch import receiver
 
 
 class DataSetModel(models.Model):
-    name = models.CharField(max_length=1024, editable=True, null=False)
+    name = models.CharField(max_length=1024, editable=True, null=False, unique=True)
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(
         User, editable=False, related_name='+', on_delete=models.CASCADE)
@@ -19,13 +20,14 @@ class FilePathModel(models.Model):
 
 
 class TaskModel(models.Model):
-    name = models.CharField(max_length=1024, editable=True, null=False)
+    name = models.CharField(max_length=1024, editable=True, null=False, unique=True)
     class_name = models.CharField(max_length=1024, null=False)
     parameters = models.JSONField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     job_id = models.CharField(max_length=128, null=True)
     job_status = models.CharField(max_length=16, null=True)
-    errors = models.CharField(max_length=2048, null=True)
+    # PostgreSQL specific array field
+    errors = ArrayField(models.CharField(max_length=1024), null=True)
     info = models.CharField(max_length=2048, null=True)
     dataset = models.ForeignKey(DataSetModel, on_delete=models.CASCADE)
 

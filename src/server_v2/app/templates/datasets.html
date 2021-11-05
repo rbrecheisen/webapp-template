@@ -5,6 +5,13 @@
         <div class="col-sm-10">
             <div class="card" style="margin-top: 10px;">
                 <div class="card-header">Datasets</div>
+                <p>
+                    Welcome to the file processor, a tool that allows you to run various tasks on sets of files.
+                    You can create a dataset by uploading a bunch of files. Once the files have been uploaded, you
+                    can view the dataset and select tasks to run on its files. Each task processes the list of
+                    files of a dataset and produces some output, often another dataset of files. The new dataset
+                    can be processed further by another task.
+                </p>
                 <div class="card-body">
                     <form action="/datasets/create" method="post" enctype="multipart/form-data">
                         {% csrf_token %}

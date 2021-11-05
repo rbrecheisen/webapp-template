@@ -2,7 +2,7 @@ django
 djangorestframework
 django-session-security
 gunicorn
-barbell2light
+barbell2light==0.27.0
 uwsgi
 pytest
 tensorflow
@@ -11,3 +11,5 @@ django-rq
 redis
 rq
 requests
+pydicom
+numpy

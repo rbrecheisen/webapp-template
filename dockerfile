@@ -3,6 +3,7 @@ FROM tensorflow/tensorflow:latest-gpu
 MAINTAINER Ralph Brecheisen <r.brecheisen@maastrichtuniversity.nl>
 
 COPY requirements.txt /requirements.txt
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 RUN apt-get -y update && \
     apt-get install -y vim libpq-dev && \
@@ -15,3 +16,5 @@ RUN apt-get -y update && \
     mkdir /data/files
 
 WORKDIR /src
+
+CMD ["/docker-entrypoint.sh"]

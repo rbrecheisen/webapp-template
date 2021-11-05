@@ -8,3 +8,7 @@ class PredictBodyCompositionScoresTask(Task):
 
     def execute_base(self, task_model):
         pass
+
+
+class PredictBodyCompositionScoresTaskForm(forms.Form):
+    pass

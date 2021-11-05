@@ -1,14 +1,21 @@
 TODO
 ====
 
+<<<<<<< HEAD
+=======
+- Implement tasks as (up)loadable plugins
+
+>>>>>>> 9b550f3df1a727814695b4ceccab2a3b9d886296
 - Implement following tasks:
-    - CheckDICOM
-    - MatchL3AndTAGFiles
-    - PredictBodyCompositionScores
-    - ValidateBodyCompositionModel
-    - ConvertToRaw
-    - UploadToXNAT
+    [x] CheckDICOM
+    -   MatchL3AndTAGFiles
+    -   PredictBodyCompositionScores
+    -   ValidateBodyCompositionModel -> how to deal with common functionality?
+    -   ConvertToRaw
+    -   UploadToXNAT
 
 - Add page for viewing Docker logs
+
+- Add web app title to environment variables and settings.py (set in base.html)
 
 [x] Implement task-specific HTML pages for additional parameters
