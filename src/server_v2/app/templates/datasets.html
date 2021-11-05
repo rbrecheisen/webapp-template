@@ -26,7 +26,7 @@
                     <ul class="list-group">
                         {% for dataset in datasets %}
                         <li class="list-group-item">
-                            <a href="/datasets/{{ dataset.id }}">{{ dataset.name }}</a>
+                            <a href="/datasets/{{ dataset.id }}">{{ dataset.name }} ({{ dataset.id }})</a>
                             [<a href="/datasets/{{ dataset.id }}/delete">delete</a>]
                         </li>
                         {% endfor %}

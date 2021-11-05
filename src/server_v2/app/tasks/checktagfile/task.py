@@ -39,7 +39,7 @@ class CheckTagFileTask(Task):
             task_model.save()
 
 
-class CheckDicomTaskForm(forms.Form):
+class CheckTagFileTaskForm(forms.Form):
     required_tags = forms.CharField(label='Required tags', max_length=1024, empty_value='P')
     required_rows = forms.IntegerField(label='Required nr. rows')
     required_cols = forms.IntegerField(label='Required nr. columns')
