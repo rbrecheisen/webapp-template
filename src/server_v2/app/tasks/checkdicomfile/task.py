@@ -7,7 +7,7 @@ from ..basetask import Task
 from ...models import FilePathModel
 
 
-class CheckDicomTask(Task):
+class CheckDicomFileTask(Task):
 
     def execute_base(self, task_model):
         files = FilePathModel.objects.filter(dataset=task_model.dataset).all()
@@ -40,7 +40,7 @@ class CheckDicomTask(Task):
             task_model.save()
 
 
-class CheckDicomTaskForm(forms.Form):
+class CheckDicomFileTaskForm(forms.Form):
     required_tags = forms.CharField(label='Required tags', max_length=1024, empty_value='P')
     required_rows = forms.IntegerField(label='Required nr. rows')
     required_cols = forms.IntegerField(label='Required nr. columns')

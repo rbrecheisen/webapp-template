@@ -1,11 +1,9 @@
 TODO
 ====
 
-<<<<<<< HEAD
 =======
 - Implement tasks as (up)loadable plugins
 
->>>>>>> 9b550f3df1a727814695b4ceccab2a3b9d886296
 - Implement following tasks:
     [x] CheckDICOM
     -   MatchL3AndTAGFiles
