@@ -16,13 +16,13 @@ class TaskExecutionError(TaskError):
 class Task:
 
     @staticmethod
-    def create_output_dataset(task_model):
+    def create_output_dataset_model(task_model):
         ds_name = '{}-{}'.format(task_model.dataset.name, task_model.name)
         ds = DataSetModel.objects.create(name=ds_name, owner=task_model.dataset.owner)
         return ds
 
     @staticmethod
-    def create_output_file(file_path, dataset):
+    def create_output_file_model(file_path, dataset):
         return FilePathModel.objects.create(path=file_path, dataset=dataset)
 
     def execute(self, task_model):
@@ -38,6 +38,5 @@ class Task:
             task_model.error_message = str(e)
             task_model.save()
 
-    @staticmethod
-    def execute_base(task_model):
+    def execute_base(self, task_model):
         raise NotImplementedError()

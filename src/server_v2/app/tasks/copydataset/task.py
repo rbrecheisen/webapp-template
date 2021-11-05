@@ -1,7 +1,7 @@
 from django import forms
 
-from .basetask import Task
-from ..models import FilePathModel
+from ..basetask import Task
+from ...models import FilePathModel
 
 
 class CopyDataSetTask(Task):
@@ -9,12 +9,12 @@ class CopyDataSetTask(Task):
     def execute_base(self, task_model):
         original = task_model.dataset
         for i in range(int(task_model.parameters['nr_times'])):
-            copy = self.create_output_dataset(task_model)
+            copy = self.create_output_dataset_model(task_model)
             copy.name = '{}-{}'.format(copy.name, i+1)
             copy.save()
             original_files = FilePathModel.objects.filter(dataset=original).all()
             for f in original_files:
-                self.create_output_file(f.path, copy)
+                self.create_output_file_model(f.path, copy)
 
 
 class CopyDataSetTaskForm(forms.Form):

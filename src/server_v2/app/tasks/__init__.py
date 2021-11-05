@@ -1,6 +1,6 @@
-from .simpletask import SimpleTask, SimpleTaskForm
-from .printdatasettask import PrintDataSetTask, PrintDataSetTaskForm
-from .copydatasettask import CopyDataSetTask, CopyDataSetTaskForm
+from .simple.simpletask import SimpleTask, SimpleTaskForm
+from .printdataset.task import PrintDataSetTask, PrintDataSetTaskForm
+from .copydataset.task import CopyDataSetTask, CopyDataSetTaskForm
 
 
 TASK_REGISTRY = {
