@@ -1,21 +1,35 @@
 import os
+import json
+import zipfile
 
 from django import forms
 
 from ..basetask import Task, TaskExecutionError
 from ...models import FilePathModel, DataSetModel
+
 from barbell2light.dicom import is_dicom_file
 
 
 class PredictBodyCompositionScoresTask(Task):
 
-    @staticmethod
-    def load_model(zip_file_path):
-        return ''
+    model_dir = '/tmp/webapp-template/tensorflow'
+
+    def load_model(self, zip_file_path):
+        import tensorflow as tf
+        with zipfile.ZipFile(zip_file_path) as zip_obj:
+            zip_obj.extractall(path=self.model_dir)
+        return tf.keras.models.load_model(self.model_dir)
+
+    def load_contour_model(self, zip_file_path):
+        import tensorflow as tf
+        with zipfile.ZipFile(zip_file_path) as zip_obj:
+            zip_obj.extractall(path=self.model_dir)
+        return tf.keras.models.load_model(self.model_dir)
 
     @staticmethod
     def load_params(file_path):
-        return ''
+        with open(file_path) as f:
+            return json.load(f)
 
     def load_tensorflow_models(self, dataset):
         files = FilePathModel.objects.filter(dataset=dataset).all()
@@ -25,11 +39,12 @@ class PredictBodyCompositionScoresTask(Task):
             if file_name == 'model.zip':
                 model = self.load_model(f.path)
             elif file_name == 'contour_model.zip':
-                contour_model = self.load_model(f.path)
+                contour_model = self.load_contour_model(f.path)
             elif file_name == 'params.json':
                 params = self.load_params(f.path)
             else:
                 raise TaskExecutionError('Not a TensorFlow model file {}'.format(f.path))
+        assert model and params
         return model, contour_model, params
 
     def execute_base(self, task_model):
