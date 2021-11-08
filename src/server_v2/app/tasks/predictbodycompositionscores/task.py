@@ -2,12 +2,15 @@ import os
 import json
 import zipfile
 
+import pydicom
 from django import forms
 
 from ..basetask import Task, TaskExecutionError
 from ...models import FilePathModel, DataSetModel
+from ..checkdicomfile.dicom_checker import DicomChecker
+from .utils import *
 
-from barbell2light.dicom import is_dicom_file
+from barbell2light.dicom import get_pixels
 
 
 class PredictBodyCompositionScoresTask(Task):
@@ -47,16 +50,21 @@ class PredictBodyCompositionScoresTask(Task):
         assert model and params
         return model, contour_model, params
 
+    @staticmethod
+    def predict_contour(contour_model, src_img, params):
+        ct = np.copy(src_img)
+        ct = normalize(
+            ct, params['min_bound_contour'], params['max_bound_contour'])
+        img2 = np.expand_dims(ct, 0)
+        img2 = np.expand_dims(img2, -1)
+        pred = contour_model.predict([img2])
+        pred_squeeze = np.squeeze(pred)
+        pred_max = pred_squeeze.argmax(axis=-1)
+        mask = np.uint8(pred_max)
+        return mask
+
     def execute_base(self, task_model):
-        """
-        This task needs to do several things:
-            (1) Load one or more TensorFlow models from dataset 1
-            (2) Apply those models to L3 files from dataset 2
-            (3) It outputs another dataset with DICOM files, NumPy arrays and CSV scores
-        Basically this task has its own dataset, namely the set from which the task was created and started.
-        It also requires the ID of the dataset containing the TensorFlow models. This ID can be passed to
-        the task as a parameter. Note that this requires the display of dataset IDs in the HTML interface.
-        """
+
         errors = []
         tensorflow_models_dataset = DataSetModel.objects.get(pk=task_model.parameters['tensorflow_models_dataset_id'])
         try:
@@ -69,9 +77,39 @@ class PredictBodyCompositionScoresTask(Task):
             return
         dataset = task_model.dataset
         files = FilePathModel.objects.filter(dataset=dataset).all()
+        dicom_checker = DicomChecker(files)
+        dicom_checker.set_required_tags(['PixelSpacing, Rows, Columns'])
+        dicom_checker.set_required_dimensions(512, 512)
+        errors = dicom_checker.execute()
+        if len(errors) > 0:
+            task_model.errors = errors
+            task_model.job_status = 'failed'
+            task_model.save()
+            return
+        output_dataset = self.create_output_dataset_model(task_model)
         for f in files:
-            # Check file is DICOM file
-            pass
+            try:
+                p = pydicom.dcmread(f.path)
+                img1 = get_pixels(p, normalize=True)
+                if contour_model:
+                    mask = self.predict_contour(contour_model, img1, params)
+                    img1 = normalize(img1, params['min_bound'], params['max_bound'])
+                    img1 = img1 * mask
+                else:
+                    img1 = normalize(img1, params['min_bound'], params['max_bound'])
+                img1 = img1.astype(np.float32)
+                img2 = np.expand_dims(img1, 0)
+                img2 = np.expand_dims(img2, -1)
+                pred = model.predict([img2])
+                pred_squeeze = np.squeeze(pred)
+                pred_max = pred_squeeze.argmax(axis=-1)
+                pred_file_name = os.path.split(f.path)[1]
+                pred_file_name = os.path.splitext(pred_file_name)[0] + '_pred.npy'
+                pred_file_path = os.path.join(os.path.split(f.path)[0], pred_file_name)
+                np.save(pred_file_path, pred_max)
+                self.create_output_file_model(pred_file_path, output_dataset)
+            except TaskExecutionError as e:
+                errors.append('{}: general error ({})'.format(f.path, e))
 
 
 class PredictBodyCompositionScoresTaskForm(forms.Form):
