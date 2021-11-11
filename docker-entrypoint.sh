@@ -17,6 +17,7 @@ END
 #  sleep 1
 #done
 
-python manage.py makemigrations app &&
-python manage.py migrate &&
+python manage.py makemigrations app
+python manage.py migrate
+
 gunicorn server.wsgi -w 2 -b 0.0.0.0:8001 -t ${WORKER_TIMEOUT}

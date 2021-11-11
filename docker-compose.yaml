@@ -1,21 +1,17 @@
 version: '3'
 services:
   nginx:
-    image: nginx:1.15.0
+    build: ./nginx
+    image: surgerymumc/nginx:latest
     container_name: server_nginx
     ports:
       - "8002:8000"
-    volumes:
-      - ./src/server_v2:/src
-      - ./src/server_v2/app/static:/data/static
-      - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - web
   web:
     build: .
     image: surgerymumc/webapp-template:latest
     container_name: server_web
-#    command: bash -c "/docker-entrypoint.sh"
     environment:
       - ROOT_DIR
       - SECRET_KEY
@@ -25,7 +21,6 @@ services:
       - POSTGRES_HOST
       - REDIS_HOST
     volumes:
-#      - ./docker-entrypoint.sh:/docker-entrypoint.sh
       - ./src/server_v2:/src
       - data:/data
     depends_on:

@@ -2,6 +2,7 @@ FROM tensorflow/tensorflow:latest-gpu
 
 MAINTAINER Ralph Brecheisen <r.brecheisen@maastrichtuniversity.nl>
 
+COPY src/server_v2 /src
 COPY requirements.txt /requirements.txt
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
@@ -10,7 +11,6 @@ RUN apt-get -y update && \
     pip install --upgrade pip && \
     pip install -r /requirements.txt && \
     pip install uwsgi gunicorn && \
-    mkdir /src && \
     mkdir /data && \
     mkdir /data/static && \
     mkdir /data/files
