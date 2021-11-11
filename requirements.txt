@@ -13,3 +13,4 @@ rq
 requests
 pydicom
 numpy
+matplotlib
