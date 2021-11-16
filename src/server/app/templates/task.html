@@ -6,10 +6,19 @@
             <div class="card" style="margin-top: 10px;">
                 <div class="card-header">
                     Task <b>{{ task.name }}</b><br>
-                    [<a href="/dataset/{{ dataset.id }}/tasks/{{ task.id }}?action=delete">delete</a>]
+                    [<a href="/tasks/{{ task.id }}/delete">delete</a>]
                 </div>
                 <div class="card-body">
-                    <p style="margin-top: 10px"><a href="/dataset/{{ dataset.id }}">Back</a></p>
+                    <form action="/tasks/{{ task.id }}/start" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ task_form }}
+                        <br>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Start task</button>
+                    </form>
+                    <br>
+                    <br>
+                    <p style="margin-top: 10px"><a href="/datasets/{{ task.dataset.id }}">Back</a></p>
                 </div>
             </div>
         </div>

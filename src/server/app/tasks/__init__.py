@@ -1,19 +1,39 @@
-from .MyQuickTask import MyQuickTask, MyQuickTaskForm
-from .MyLongRunningTask import MyLongRunningTask, MyLongRunningTaskForm
-from .PredictBodyCompositionTask import PredictBodyCompositionScoresTask
-from .ValidateBodyCompositionTask import ValidateBodyCompositionScoresTask
-from .CheckDicomTask import CheckDicomTask
+from .simple.task import SimpleTask, SimpleTaskForm
+from .printdataset.task import PrintDataSetTask, PrintDataSetTaskForm
+from .copydataset.task import CopyDataSetTask, CopyDataSetTaskForm
+from .checkdicomfile.task import CheckDicomFileTask, CheckDicomFileTaskForm
+from .checktagfile.task import CheckTagFileTask, CheckTagFileTaskForm
+from .predictbodycompositionscores.task import PredictBodyCompositionScoresTask, PredictBodyCompositionScoresTaskForm
+from .numpy2dcm.task import Numpy2DcmTask, Numpy2DcmTaskForm
 
 
 TASK_REGISTRY = {
-    'MyQuickTask': MyQuickTask,
-    'MyLongRunningTask': MyLongRunningTask,
-    'PredictBodyCompositionScoresTask': PredictBodyCompositionScoresTask,
-    'ValidateBodyCompositionScoresTask': ValidateBodyCompositionScoresTask,
-    'CheckDicomTask': CheckDicomTask,
-}
-
-TASK_FORM_REGISTRY = {
-    'MyQuickTask': None,
-    'MyLongRunningTask': MyLongRunningTaskForm,
+    'SimpleTask': {
+        'class': SimpleTask,
+        'form_class': SimpleTaskForm,
+    },
+    'PrintDataSetTask': {
+        'class': PrintDataSetTask,
+        'form_class': PrintDataSetTaskForm,
+    },
+    'CopyDataSetTask': {
+        'class': CopyDataSetTask,
+        'form_class': CopyDataSetTaskForm,
+    },
+    'CheckDicomFileTask': {
+        'class': CheckDicomFileTask,
+        'form_class': CheckDicomFileTaskForm,
+    },
+    'CheckTagFileTask': {
+        'class': CheckTagFileTask,
+        'form_class': CheckTagFileTaskForm,
+    },
+    'PredictBodyCompositionScoresTask': {
+        'class': PredictBodyCompositionScoresTask,
+        'form_class': PredictBodyCompositionScoresTaskForm,
+    },
+    'Numpy2DcmTask': {
+        'class': Numpy2DcmTask,
+        'form_class': Numpy2DcmTaskForm,
+    },
 }

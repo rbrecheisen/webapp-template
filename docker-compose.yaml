@@ -21,7 +21,7 @@ services:
       - POSTGRES_HOST
       - REDIS_HOST
     volumes:
-      - ./src/server_v2:/src
+      - ./src/server:/src
       - data:/data
     depends_on:
       - db
@@ -46,7 +46,7 @@ services:
       - POSTGRES_HOST
       - REDIS_HOST
     volumes:
-      - ./src/server_v2:/src
+      - ./src/server:/src
       - data:/data
     depends_on:
       - db

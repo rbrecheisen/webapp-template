@@ -2,6 +2,8 @@ import os
 
 from pathlib import Path
 
+SITE_ID = 1
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ROOT_DIR = os.environ.get('ROOT_DIR', '/tmp/webapp-template')
@@ -9,9 +11,9 @@ os.makedirs(ROOT_DIR, exist_ok=True)
 
 SECRET_KEY = os.environ.get('SECRET_KEY', '1234')
 
-DEBUG = False if int(os.environ.get('DEBUG', '0')) == 0 else True
+DEBUG = True if int(os.environ.get('DEBUG', '1')) == 1 else False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+ALLOWED_HOSTS = [x.strip() for x in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,6 +22,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'rest_framework',
+    'rest_framework.authtoken',
     'django_rq',
     'session_security',
     'app',
@@ -54,6 +59,21 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.TemplateHTMLRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
+
 WSGI_APPLICATION = 'server.wsgi.application'
 
 DATABASES = {
@@ -74,21 +94,19 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-FILE_UPLOAD_TEMP_DIR = os.environ.get('FILE_UPLOAD_TEMP_DIR', '/tmp')
-os.makedirs(FILE_UPLOAD_TEMP_DIR, exist_ok=True)
-
-FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440 * 40  # 100mb
-
 WORKER_TIMEOUT = int(os.environ.get('WORKER_TIMEOUT', '500'))
 
 RQ_QUEUES = {
     'default': {
         'HOST': os.environ.get('REDIS_HOST', 'localhost'),
-        'PORT': int(os.environ.get('REDIS_PORT', '6379')),
-        'DB': int(os.environ.get('REDIS_DB', '0')),
+        'PORT': 6379,
+        'DB': 0,
         'DEFAULT_TIMEOUT': WORKER_TIMEOUT,
     }
 }
+
+FILE_UPLOAD_TEMP_DIR = os.environ.get('FILE_UPLOAD_TEMP_DIR', '/tmp')
+os.makedirs(FILE_UPLOAD_TEMP_DIR, exist_ok=True)
 
 LANGUAGE_CODE = 'en-us'
 

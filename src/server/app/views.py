@@ -1,16 +1,108 @@
-from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, HttpResponse
-from django.core.files import File
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseForbidden
 
-from .backend import *
-from .tasks.BaseTask import TaskUnknownError
+from .backend import get_dataset_models, get_dataset_model, create_dataset_model_from_files, \
+    delete_dataset_model, rename_dataset_model, get_file_names, get_task_models, get_task_classes, create_task_model, \
+    get_task_model, delete_task_model, start_task_in_background, get_task_form
 
 
+@login_required
+@require_http_methods(['GET'])
+def index(request):
+    return redirect('/datasets/')
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@login_required
+@require_http_methods(['GET'])
+def get_datasets(request):
+    return render(request, 'datasets.html', context={'datasets': get_dataset_models(request.user)})
+
+
+@login_required
+@require_http_methods(['GET'])
+def get_dataset(request, dataset_id):
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(dataset_id),
+        'task_classes': get_task_classes(),
+        'tasks': get_task_models(dataset_id), 'file_names': get_file_names(dataset_id)})
+
+
+@login_required
+@require_http_methods(['POST'])
+def create_dataset(request):
+    files = request.FILES.getlist('files')
+    dataset = create_dataset_model_from_files(files, request.user)
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(dataset.id),
+        'task_classes': get_task_classes(),
+        'tasks': get_task_models(dataset.id), 'file_names': get_file_names(dataset.id)})
+
+
+@login_required
+@require_http_methods(['POST'])
+def rename_dataset(request, dataset_id):
+    dataset = rename_dataset_model(dataset_id, request.POST.get('new_name', None))
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(dataset.id),
+        'task_classes': get_task_classes(),
+        'tasks': get_task_models(dataset.id), 'file_names': get_file_names(dataset.id), 'renamed': True})
+
+
+@login_required
+@require_http_methods(['GET'])
+def delete_dataset(request, dataset_id):
+    delete_dataset_model(dataset_id)
+    return render(request, 'datasets.html', context={'datasets': get_dataset_models(request.user)})
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@login_required
+@require_http_methods(['POST'])
+def create_task(request, dataset_id):
+    ds = get_dataset_model(dataset_id)
+    task = create_task_model(ds, request.POST.get('task_class', None))
+    return render(request, 'task.html', context={'task': task, 'task_form': get_task_form(task.id)})
+
+
+@login_required
+@require_http_methods(['GET'])
+def get_task(request, task_id):
+    return render(request, 'task.html', context={
+        'task': get_task_model(task_id), 'task_form': get_task_form(task_id)})
+
+
+@login_required
+@require_http_methods(['GET'])
+def delete_task(request, task_id):
+    task = get_task_model(task_id)
+    dataset_id = task.dataset.id
+    delete_task_model(task_id)
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(dataset_id),
+        'task_classes': get_task_classes(),
+        'tasks': get_task_models(dataset_id), 'file_names': get_file_names(dataset_id)})
+
+
+@login_required
+@require_http_methods(['POST'])
+def start_task(request, task_id):
+    task = get_task_model(task_id)
+    task.parameters = dict(request.POST.items())
+    task = start_task_in_background(task)
+    return render(request, 'dataset.html', context={
+        'dataset': get_dataset_model(task.dataset.id),
+        'task_classes': get_task_classes(),
+        'tasks': get_task_models(task.dataset.id), 'file_names': get_file_names(task.dataset.id)})
+
+
+# ----------------------------------------------------------------------------------------------------------------------
 def handle_login(request):
     """ This view allows retrieval of a session ID for the purpose of calling views protected
-    with the @login_required decorator. You can then use Python Requests to call HTML-based
+    with the @login_required decorator using REST. You can then use Python requests to call HTML-based
     views instead of REST API endpoints.
     """
     if request.method == 'GET':
@@ -23,103 +115,4 @@ def handle_login(request):
             # that you need in subsequent requests to @login_required decorated views
             return HttpResponse('authenticated')
         return HttpResponseForbidden('wrong username or password')
-    return HttpResponseForbidden('Wrong method')
-
-
-@login_required
-def datasets(request):
-    if request.method == 'GET':
-        return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
-    elif request.method == 'POST':
-        files = request.FILES.getlist('files')
-        create_dataset_model_from_files(files, request.user)
-        return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
-    else:
-        return HttpResponseForbidden('Wrong method')
-
-
-@login_required
-def dataset(request, dataset_id):
-    ds = get_dataset_model(dataset_id)
-    if request.method == 'GET':
-        action = request.GET.get('action', None)
-        if action == 'delete':
-            delete_dataset_model(ds)
-            return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
-    elif request.method == 'POST':
-        new_name = request.POST.get('new_name', None)
-        if new_name:
-            rename_dataset_model(ds, new_name)
-            return render(request, 'datasets.html', context={'datasets': get_dataset_models()})
-    else:
-        return HttpResponseForbidden('Wrong method')
-    return render(request, 'dataset.html', context={
-        'dataset': ds,
-        'tasks': get_task_models_for_dataset(ds),
-        'file_names': get_file_path_models_names(ds)
-    })
-
-
-@login_required
-def tasks(request):
-    if request.method == 'GET':
-        return render(request, 'tasks.html', context={
-            'tasks': get_task_models(),
-            'task_types': get_task_types(),
-            'datasets': get_dataset_models(),
-        })
-    elif request.method == 'POST':
-        parameters = dict(request.POST.items())
-        create_task(parameters)
-        return render(request, 'tasks.html', context={
-            'tasks': get_task_models(),
-            'task_types': get_task_types(),
-            'datasets': get_dataset_models(),
-        })
-    else:
-        return HttpResponseForbidden('Wrong method')
-
-
-@login_required
-def task(request, task_id):
-    if request.method == 'GET':
-        t = get_task_model(task_id)
-        action = request.GET.get('action', None)
-        if action == 'delete':
-            cancel_and_delete_task(t)
-            return render(request, 'tasks.html', context={
-                'tasks': get_task_models(),
-                'task_types': get_task_types(),
-                'datasets': get_dataset_models(),
-            })
-        return render(request, 'task.html', context={'task': t})
-    else:
-        return HttpResponseForbidden('Wrong method')
-
-
-@login_required
-def new_task(request):
-    if request.method == 'GET':
-        task_type = request.GET.get('task_type', None)
-        dataset_id = request.GET.get('dataset_id', None)
-        ds = get_dataset_model(dataset_id)
-        return render(request, 'new_task.html', context={
-            'form': get_task_form(task_type),
-            'task_type': task_type,
-            'dataset': ds,
-        })
-    else:
-        return HttpResponseForbidden('Wrong method')
-
-
-@login_required
-def download(request, dataset_id):
-    if request.method == 'GET':
-        ds = get_dataset_model(dataset_id)
-        file_path = get_zipped_download(ds)
-        with open(file_path, 'rb') as f:
-            response = HttpResponse(File(f), content_type='application/octet-stream')
-            response['Content-Disposition'] = 'attachment; filename="{}.zip"'.format(ds.name)
-            return response
-    else:
-        return HttpResponseForbidden('Wrong method')
+    return HttpResponseForbidden('wrong method')

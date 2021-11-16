@@ -2,7 +2,7 @@ FROM tensorflow/tensorflow:latest-gpu
 
 MAINTAINER Ralph Brecheisen <r.brecheisen@maastrichtuniversity.nl>
 
-COPY src/server_v2 /src
+COPY src/server /src
 COPY requirements.txt /requirements.txt
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
