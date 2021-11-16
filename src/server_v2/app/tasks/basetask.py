@@ -16,6 +16,11 @@ class TaskExecutionError(TaskError):
 class Task:
 
     @staticmethod
+    def get_files(dataset):
+        files = FilePathModel.objects.filter(dataset=dataset).all()
+        return files
+
+    @staticmethod
     def create_output_dataset_model(task_model):
         ds_name = '{}-{}'.format(task_model.dataset.name, task_model.name)
         ds = DataSetModel.objects.create(name=ds_name, owner=task_model.dataset.owner)

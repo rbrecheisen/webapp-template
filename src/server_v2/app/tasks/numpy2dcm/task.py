@@ -6,7 +6,6 @@ from django import forms
 from barbell2light.dicom import is_dicom_file, tag2numpy
 
 from ..basetask import Task
-from ...models import FilePathModel, DataSetModel
 
 
 class Numpy2DcmTask(Task):
@@ -35,8 +34,7 @@ class Numpy2DcmTask(Task):
     def execute_base(self, task_model):
         # https://medium.com/analytics-vidhya/how-to-convert-grayscale-dicom-file-to-rgb-dicom-file-with-python-df86ac055bd
         # https://stackoverflow.com/questions/65439230/convert-grayscale-2d-numpy-array-to-rgb-image
-        dataset = task_model.dataset
-        files = FilePathModel.objects.filter(dataset=dataset).all()
+        files = self.get_files(task_model.dataset)
         output_dataset = self.create_output_dataset_model(task_model)
         for f in files:
             if is_dicom_file(f.path):
